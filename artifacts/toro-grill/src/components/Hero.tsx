@@ -13,51 +13,61 @@ export function Hero() {
 
   return (
     <section className="relative w-full h-[100dvh] flex items-center justify-center overflow-hidden">
-      <div 
+      <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImg})` }}
       />
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/40 to-background" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/75 via-black/50 to-background" />
 
       <div className="relative z-20 container mx-auto px-4 flex flex-col items-center justify-center text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
+          className="flex flex-col items-center"
         >
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-9xl font-bold tracking-wider text-primary mb-6">
-            TORO GRILL
-          </h1>
-          <p className="text-xl md:text-3xl text-foreground font-light mb-12 tracking-wide">
+          <div className="mb-6 flex flex-col items-center">
+            <h1 className="font-serif text-6xl md:text-8xl lg:text-[10rem] font-black tracking-widest text-white leading-none uppercase">
+              TORO
+            </h1>
+            <div className="w-full h-[3px] bg-primary my-1" />
+            <h1 className="font-serif text-6xl md:text-8xl lg:text-[10rem] font-black tracking-widest text-white leading-none uppercase">
+              GRILL
+            </h1>
+          </div>
+          <p className="text-lg md:text-2xl text-white/80 font-light mb-12 tracking-widest">
             בשר אמיתי. חוויה אמיתית.
           </p>
         </motion.div>
 
-        <motion.div 
-          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
+        <motion.div
+          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
-          <Button 
-            size="lg" 
-            className="w-full sm:w-auto text-lg h-14 px-8 border-2 border-primary bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105"
+          <Button
+            size="lg"
+            data-testid="button-delivery"
+            className="w-full sm:w-auto text-lg h-13 px-8 bg-primary text-white border-2 border-primary hover:bg-primary/90 rounded-none transition-transform hover:scale-105"
             onClick={() => scrollToSection("menu")}
           >
             להזמנת משלוח
           </Button>
-          <Button 
+          <Button
             variant="outline"
-            size="lg" 
-            className="w-full sm:w-auto text-lg h-14 px-8 border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent transition-transform hover:scale-105"
+            size="lg"
+            data-testid="button-table"
+            className="w-full sm:w-auto text-lg h-13 px-8 border-2 border-white/60 text-white hover:bg-white hover:text-black bg-transparent rounded-none transition-transform hover:scale-105"
             onClick={() => scrollToSection("contact")}
           >
             להזמנת שולחן
           </Button>
-          <Button 
+          <Button
             variant="outline"
-            size="lg" 
-            className="w-full sm:w-auto text-lg h-14 px-8 border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent transition-transform hover:scale-105"
+            size="lg"
+            data-testid="button-events"
+            className="w-full sm:w-auto text-lg h-13 px-8 border-2 border-primary/70 text-primary hover:bg-primary hover:text-white bg-transparent rounded-none transition-transform hover:scale-105"
             onClick={() => scrollToSection("events")}
           >
             לאירועים
@@ -65,14 +75,14 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <motion.div 
+      <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 cursor-pointer text-primary"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ duration: 2, delay: 1, repeat: Infinity }}
         onClick={() => scrollToSection("menu")}
       >
-        <ChevronDown size={40} strokeWidth={1} />
+        <ChevronDown size={40} strokeWidth={1.5} />
       </motion.div>
     </section>
   );

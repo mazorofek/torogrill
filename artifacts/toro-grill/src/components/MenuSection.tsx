@@ -1,118 +1,92 @@
-import { motion } from "framer-motion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import menuImg1 from "@/assets/images/menu-1.png";
-import menuImg2 from "@/assets/images/menu-2.png";
-import menuImg3 from "@/assets/images/menu-3.png";
-
-type MenuItem = {
-  name: string;
-  description: string;
-  price: string;
-  image?: string;
-};
-
-const menuData: Record<string, MenuItem[]> = {
-  ראשונות: [
-    { name: "סלט ירוק", description: "עלי בייבי, ויניגרט הדרים, אגוזי מלך קלויים", price: "52 ₪" },
-    { name: "ברוסקטה בקר", description: "פילה בקר קצוץ, צלפים, איולי חרדל על לחם קלוי", price: "78 ₪", image: menuImg2 },
-    { name: "כבד קצוץ", description: "כבד עוף מובחר, ריבת בצל, לחם קלוי", price: "64 ₪" },
-    { name: "נקניקיות מרגז", description: "תוצרת בית, כרוב כבוש, חרדל דיז'ון", price: "72 ₪" },
-    { name: "מרק בשר", description: "ציר בקר עשיר, ירקות שורש, בשר מפורק", price: "68 ₪" },
-  ],
-  עיקריות: [
-    { name: "אנטרקוט פרימיום", description: "300 גרם אנטרקוט מיושן 30 יום, צ'ימיצ'ורי", price: "185 ₪" },
-    { name: "פילה מיניון", description: "250 גרם נתח רך במיוחד, רוטב יין אדום", price: "210 ₪" },
-    { name: "ריב-איי על העצם", description: "500 גרם, צלוי בגריל פחמים", price: "280 ₪" },
-    { name: "קבב טלה", description: "קבב תוצרת בית מתובל, טחינה, עגבניות צלויות", price: "95 ₪" },
-    { name: "חזה עוף על האש", description: "מרינדת עשבי תיבול, שמן זית ולימון", price: "85 ₪" },
-  ],
-  בשרים: [
-    { name: "סינטה 300g", description: "נתח רזה ומלא טעם, צלוי במידת עשייה מדויקת", price: "165 ₪" },
-    { name: "ואגיו יפני", description: "150 גרם פרימיום ריב-איי ואגיו, מלח ים אטלנטי", price: "350 ₪", image: menuImg1 },
-    { name: "צלעות טלה", description: "300 גרם צלעות טלה מקומי, קרם שום", price: "220 ₪", image: menuImg3 },
-    { name: "אנטרקוט 350g", description: "נתח משויש ועסיסי מגידול מקומי", price: "195 ₪" },
-  ],
-  סלטים: [
-    { name: "סלט ירוק עם דרסינג לימון", description: "חסות פריכות, מלפפון, שמן זית ולימון סחוט", price: "55 ₪" },
-    { name: "טבולה כרובית", description: "בורגול, עשבי תיבול טריים, כרובית צלויה", price: "62 ₪" },
-    { name: "סלט יווני", description: "עגבניות, מלפפונים, בצל סגול, זיתי קלמטה, גבינת פטה שקדים", price: "65 ₪" },
-    { name: "חצילים בטחינה", description: "חציל בלאדי שרוף באש גלויה, טחינה הר ברכה", price: "58 ₪" },
-    { name: "חומוס אסלי", description: "מוגש חם עם גרגירי חומוס ושמן זית", price: "45 ₪" },
-  ],
-  שתייה: [
-    { name: "מים מינרליים", description: "סן פלגרינו / אקווה פאנה 750 מ\"ל", price: "28 ₪" },
-    { name: "קולה / זירו", description: "בקבוק זכוכית", price: "16 ₪" },
-    { name: "בירה מהחבית", description: "סטלה ארטואה / גולדסטאר 500 מ\"ל", price: "35 ₪" },
-    { name: "יין אדום כוס", description: "קברנה סוביניון, יקבי רמת הגולן", price: "48 ₪" },
-    { name: "לימונדה טרייה", description: "נסחט במקום עם נענע", price: "22 ₪" },
-  ],
-};
-
-const categories = Object.keys(menuData);
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { menuSections } from "@/data/menu";
 
 export function MenuSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = menuSections[activeIndex];
+
   return (
     <section id="menu" className="py-24 bg-background border-b border-white/5">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <motion.div 
+      <div className="container mx-auto px-4 max-w-4xl">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-14"
         >
-          <h2 className="text-4xl md:text-5xl font-serif text-primary mb-4">התפריט שלנו</h2>
-          <div className="w-24 h-1 bg-primary mx-auto opacity-50"></div>
+          <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">התפריט שלנו</h2>
+          <div className="w-20 h-[3px] bg-primary mx-auto" />
         </motion.div>
 
-        <Tabs defaultValue={categories[0]} dir="rtl" className="w-full">
-          <TabsList className="w-full flex flex-wrap justify-center h-auto bg-transparent mb-12 gap-2">
-            {categories.map((cat) => (
-              <TabsTrigger 
-                key={cat} 
-                value={cat}
-                className="text-lg px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-transparent data-[state=active]:border-primary transition-all rounded-none"
-              >
-                {cat}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          
-          {categories.map((cat) => (
-            <TabsContent key={cat} value={cat} className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-x-16 gap-y-12">
-                {menuData[cat].map((item, idx) => (
-                  <motion.div 
-                    key={item.name}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1, duration: 0.5 }}
-                    className="flex flex-col group"
-                  >
-                    {item.image && (
-                      <div className="w-full h-48 md:h-64 overflow-hidden mb-6 rounded-sm">
-                        <img 
-                          src={item.image} 
-                          alt={item.name} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                      </div>
-                    )}
-                    <div className="flex justify-between items-baseline mb-2">
-                      <h3 className="text-2xl font-serif text-foreground">{item.name}</h3>
-                      <div className="flex-grow border-b border-white/10 border-dashed mx-4"></div>
-                      <span className="text-xl text-primary font-serif whitespace-nowrap">{item.price}</span>
-                    </div>
-                    <p className="text-muted-foreground text-sm font-light leading-relaxed">
-                      {item.description}
-                    </p>
-                  </motion.div>
+        {/* Category tabs */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12" dir="rtl">
+          {menuSections.map((section, idx) => (
+            <button
+              key={section.title}
+              data-testid={`tab-menu-${section.title}`}
+              onClick={() => setActiveIndex(idx)}
+              className={`
+                px-5 py-2.5 text-base font-medium transition-all duration-200 border rounded-none
+                ${activeIndex === idx
+                  ? "bg-primary text-white border-primary"
+                  : "bg-transparent text-white/60 border-white/15 hover:border-primary/50 hover:text-white/90"
+                }
+              `}
+            >
+              {section.title}
+            </button>
+          ))}
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeIndex}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Skewers note box */}
+            {active.note && (
+              <div className="mb-10 border border-primary/60 bg-primary/5 px-6 py-5 text-sm text-white/90 space-y-2" dir="rtl">
+                {active.note.map((line, i) => (
+                  <p key={i} className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5 shrink-0">—</span>
+                    <span>{line}</span>
+                  </p>
                 ))}
               </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+            )}
+
+            {/* Menu items grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0" dir="rtl">
+              {active.items.map((item, idx) => (
+                <div
+                  key={`${item.name}-${idx}`}
+                  data-testid={`menu-item-${idx}`}
+                  className="py-4 border-b border-white/8 last:border-b-0 md:last:border-b-0"
+                >
+                  <div className="flex items-baseline gap-1 w-full">
+                    <span className="text-white font-medium text-base leading-snug shrink-0">
+                      {item.name}
+                    </span>
+                    <span className="flex-grow border-b border-dashed border-white/20 mx-3 mb-1" />
+                    <span className="text-primary font-semibold text-base whitespace-nowrap shrink-0">
+                      {item.price !== null ? `${item.price} ₪` : "—"}
+                    </span>
+                  </div>
+                  {item.description && (
+                    <p className="text-white/45 text-sm mt-1 pr-0 font-light leading-snug">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
