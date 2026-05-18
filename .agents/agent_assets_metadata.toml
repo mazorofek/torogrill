@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "jNQu2V2_tjYE8p2NA-id3"
+uri = "file://artifacts/toro-grill/src/assets/images/hero.png"
+type = "image"
+title = "dark moody steak hero"
+
+[[generated]]
+id = "WK0yd2Gpn0muFQi_AKJ-y"
+uri = "file://artifacts/toro-grill/src/assets/images/menu-1.png"
+type = "image"
+title = "steak dish close up"
+
+[[generated]]
+id = "YRcDtNj0bpowrtr9jK9e7"
+uri = "file://artifacts/toro-grill/src/assets/images/menu-2.png"
+type = "image"
+title = "appetizer bruschetta"
+
+[[generated]]
+id = "UFP2p8yKhvWigLuxudY4u"
+uri = "file://artifacts/toro-grill/src/assets/images/menu-3.png"
+type = "image"
+title = "lamb chops dish"

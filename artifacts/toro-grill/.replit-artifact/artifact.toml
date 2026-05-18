@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Toro Grill"
+version = "1.0.0"
+id = "artifacts/toro-grill"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22365
+
+[services.development]
+run = "pnpm --filter @workspace/toro-grill run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/toro-grill", "run", "build" ]
+publicDir = "artifacts/toro-grill/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22365"
+BASE_PATH = "/"
