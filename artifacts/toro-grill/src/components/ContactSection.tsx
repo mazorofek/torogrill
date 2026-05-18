@@ -74,7 +74,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-sm text-white/45 mb-1">כתובת</p>
-                  <p className="text-lg font-light text-white">רחוב דיזנגוף 100, תל אביב</p>
+                  <p className="text-lg font-light text-white">סחרוב 20 ראשון לציון</p>
                 </div>
               </div>
             </div>
