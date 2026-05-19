@@ -2,8 +2,24 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
-export function StickyOrderBar() {
-  const { scrollY } = { scrollY: { onChange: (cb: (v: number) => void) => { let prev = 0; const handler = () => { cb(window.scrollY); prev = window.scrollY; }; window.addEventListener("scroll", handler, { passive: true }); return () => window.removeEventListener("scroll", handler); } } };
+type StickyOrderBarProps = {
+  onDeliveryClick: () => void;
+};
+
+export function StickyOrderBar({ onDeliveryClick }: StickyOrderBarProps) {
+  const { scrollY } = {
+    scrollY: {
+      onChange: (cb: (v: number) => void) => {
+        let prev = 0;
+        const handler = () => {
+          cb(window.scrollY);
+          prev = window.scrollY;
+        };
+        window.addEventListener("scroll", handler, { passive: true });
+        return () => window.removeEventListener("scroll", handler);
+      },
+    },
+  };
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -32,7 +48,7 @@ export function StickyOrderBar() {
         <Button
           data-testid="sticky-button-delivery"
           className="flex-1 bg-primary text-white hover:bg-primary/90 rounded-none h-12 text-base font-medium border-none"
-          onClick={() => scrollToSection("menu")}
+          onClick={onDeliveryClick}
         >
           משלוח
         </Button>

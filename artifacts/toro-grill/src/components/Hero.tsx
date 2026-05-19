@@ -2,8 +2,13 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import heroImg from "@/assets/images/hero.png";
+import logoImg from "@/assets/images/toro-logo.png";
 
-export function Hero() {
+type HeroProps = {
+  onDeliveryClick: () => void;
+};
+
+export function Hero({ onDeliveryClick }: HeroProps) {
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -18,6 +23,13 @@ export function Hero() {
         style={{ backgroundImage: `url(${heroImg})` }}
       />
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/75 via-black/50 to-background" />
+
+      <img
+        src={logoImg}
+        alt="Toro Grill"
+        className="absolute top-6 z-20 h-auto w-40 border border-white/10 bg-black/80 object-contain px-2 py-1 shadow-2xl md:top-8 md:w-56"
+        data-testid="hero-logo"
+      />
 
       <div className="relative z-20 container mx-auto px-4 flex flex-col items-center justify-center text-center">
         <motion.div
@@ -50,7 +62,7 @@ export function Hero() {
             size="lg"
             data-testid="button-delivery"
             className="w-full sm:w-auto text-lg h-13 px-8 bg-primary text-white border-2 border-primary hover:bg-primary/90 rounded-none transition-transform hover:scale-105"
-            onClick={() => scrollToSection("menu")}
+            onClick={onDeliveryClick}
           >
             להזמנת משלוח
           </Button>
