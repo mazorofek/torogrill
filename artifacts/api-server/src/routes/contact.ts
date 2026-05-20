@@ -1,4 +1,6 @@
 import { Router, type IRouter } from "express";
+import { escapeHtml, getStringField, sendBusinessEmail } from "../lib/email";
+import { formSubmissionRateLimit } from "../middlewares/rateLimit";
 
 const router: IRouter = Router();
 
@@ -8,22 +10,6 @@ type ContactPayload = {
   email?: string;
   message: string;
 };
-
-function getStringField(body: unknown, field: string): string {
-  if (!body || typeof body !== "object") return "";
-
-  const value = (body as Record<string, unknown>)[field];
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
 
 function parseContactPayload(body: unknown): ContactPayload | null {
   const name = getStringField(body, "name");
@@ -41,22 +27,12 @@ function parseContactPayload(body: unknown): ContactPayload | null {
   };
 }
 
-router.post("/contact", async (req, res, next) => {
+router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
   try {
     const payload = parseContactPayload(req.body);
 
     if (!payload) {
       res.status(400).json({ message: "Missing required contact fields." });
-      return;
-    }
-
-    const apiKey = process.env["RESEND_API_KEY"];
-    const toEmail = process.env["CONTACT_TO_EMAIL"];
-    const fromEmail =
-      process.env["RESEND_FROM_EMAIL"] ?? "Toro Grill <onboarding@resend.dev>";
-
-    if (!apiKey || !toEmail) {
-      res.status(500).json({ message: "Contact email is not configured." });
       return;
     }
 
@@ -80,23 +56,19 @@ router.post("/contact", async (req, res, next) => {
       </div>
     `;
 
-    const resendResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: [toEmail],
-        reply_to: payload.email,
-        subject,
-        text,
-        html,
-      }),
+    const emailResult = await sendBusinessEmail({
+      subject,
+      text,
+      html,
+      replyTo: payload.email,
     });
 
-    if (!resendResponse.ok) {
+    if (emailResult.status === "missing-config") {
+      res.status(500).json({ message: "Contact email is not configured." });
+      return;
+    }
+
+    if (!emailResult.ok) {
       res.status(502).json({ message: "Failed to send contact email." });
       return;
     }

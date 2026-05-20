@@ -6,6 +6,7 @@ _Replace the heading above with the project's name, and this line with one sente
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server
 - `pnpm --filter @workspace/toro-grill run dev` — run the Toro Grill frontend
+- `docker compose up --build` — run API + frontend with Docker, frontend on port 8080
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec

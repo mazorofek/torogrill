@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -39,13 +40,42 @@ export function EventsSection() {
     },
   });
 
-  const onSubmit = (_data: FormValues) => {
-    toast({
-      title: "תודה!",
-      description: "נחזור אליכם בהקדם",
-      variant: "default",
-    });
-    form.reset();
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const response = await fetch("/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 429) {
+        toast({
+          title: "יותר מדי פניות",
+          description: "נשלחו יותר מדי פניות, נסו שוב בעוד כמה דקות",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Event request failed");
+      }
+
+      toast({
+        title: "תודה!",
+        description: "הפנייה נשלחה, נחזור אליכם בהקדם",
+        variant: "default",
+      });
+      form.reset();
+    } catch {
+      toast({
+        title: "שגיאה",
+        description: "שליחת הפנייה נכשלה, נסו שוב",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -54,7 +84,8 @@ export function EventsSection() {
       <div
         className="absolute inset-0 z-0 opacity-[0.04]"
         style={{
-          backgroundImage: "repeating-linear-gradient(0deg, #d71920 0px, #d71920 1px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #d71920 0px, #d71920 1px, transparent 1px, transparent 60px)",
+          backgroundImage:
+            "repeating-linear-gradient(0deg, #d71920 0px, #d71920 1px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #d71920 0px, #d71920 1px, transparent 1px, transparent 60px)",
         }}
       />
 
@@ -66,10 +97,13 @@ export function EventsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">אירועים ומסיבות</h2>
+          <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">
+            אירועים ומסיבות
+          </h2>
           <div className="w-20 h-[3px] bg-primary mx-auto mb-6" />
           <p className="text-base text-white/55 font-light max-w-xl mx-auto leading-relaxed">
-            אנחנו מארגנים אירועים עסקיים, חגיגות משפחתיות ומסיבות פרטיות. מלאו את הטופס ונחזור אליכם תוך 24 שעות.
+            אנחנו מארגנים אירועים עסקיים, חגיגות משפחתיות ומסיבות פרטיות. מלאו
+            את הטופס ונחזור אליכם תוך 24 שעות.
           </p>
         </motion.div>
 
@@ -81,7 +115,11 @@ export function EventsSection() {
           className="bg-black/60 backdrop-blur-sm border border-primary/20 p-8 md:p-12 shadow-2xl"
         >
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" dir="rtl">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+              dir="rtl"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
@@ -128,7 +166,9 @@ export function EventsSection() {
                   name="date"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white/80">תאריך האירוע</FormLabel>
+                      <FormLabel className="text-white/80">
+                        תאריך האירוע
+                      </FormLabel>
                       <FormControl>
                         <Input
                           data-testid="input-date"
@@ -147,7 +187,9 @@ export function EventsSection() {
                   name="guests"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white/80">מספר מוזמנים</FormLabel>
+                      <FormLabel className="text-white/80">
+                        מספר מוזמנים
+                      </FormLabel>
                       <FormControl>
                         <Input
                           data-testid="input-guests"
@@ -186,9 +228,13 @@ export function EventsSection() {
                 data-testid="button-submit-events"
                 type="submit"
                 size="lg"
+                disabled={form.formState.isSubmitting}
                 className="w-full bg-primary text-white hover:bg-primary/90 rounded-none h-14 text-lg font-serif tracking-wide transition-all mt-4 border-none"
               >
-                שלחו פנייה
+                {form.formState.isSubmitting && (
+                  <LoaderCircle size={18} className="animate-spin" />
+                )}
+                {form.formState.isSubmitting ? "שולח..." : "שלחו פנייה"}
               </Button>
             </form>
           </Form>

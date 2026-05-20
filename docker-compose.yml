@@ -1,0 +1,20 @@
+services:
+  api:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    env_file:
+      - artifacts/api-server/.env
+    environment:
+      NODE_ENV: production
+
+  web:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
