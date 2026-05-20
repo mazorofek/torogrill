@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "corepack enable && pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm run build:web",
+  "outputDirectory": "artifacts/toro-grill/dist/public",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://YOUR_RENDER_SERVICE.onrender.com/api/:path*"
+    }
+  ]
+}
