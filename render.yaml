@@ -1,6 +1,7 @@
 services:
   - type: web
     name: torogrill-api
+    plan: standard-0
     runtime: node
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm run build:api
     startCommand: pnpm --filter @workspace/api-server run start
