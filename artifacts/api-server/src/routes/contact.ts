@@ -7,14 +7,12 @@ const router: IRouter = Router();
 type ContactPayload = {
   name: string;
   phone: string;
-  email?: string;
   message: string;
 };
 
 function parseContactPayload(body: unknown): ContactPayload | null {
   const name = getStringField(body, "name");
   const phone = getStringField(body, "phone");
-  const email = getStringField(body, "email");
   const message = getStringField(body, "message");
 
   if (!name || !phone || !message) return null;
@@ -22,7 +20,6 @@ function parseContactPayload(body: unknown): ContactPayload | null {
   return {
     name,
     phone,
-    email: email || undefined,
     message,
   };
 }
@@ -40,7 +37,6 @@ router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
     const text = [
       `שם: ${payload.name}`,
       `טלפון: ${payload.phone}`,
-      `אימייל: ${payload.email ?? "לא נמסר"}`,
       "",
       payload.message,
     ].join("\n");
@@ -50,7 +46,6 @@ router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
         <h2>פנייה חדשה מאתר Toro Grill</h2>
         <p><strong>שם:</strong> ${escapeHtml(payload.name)}</p>
         <p><strong>טלפון:</strong> ${escapeHtml(payload.phone)}</p>
-        <p><strong>אימייל:</strong> ${escapeHtml(payload.email ?? "לא נמסר")}</p>
         <p><strong>הודעה:</strong></p>
         <p>${escapeHtml(payload.message).replaceAll("\n", "<br />")}</p>
       </div>
@@ -60,7 +55,6 @@ router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
       subject,
       text,
       html,
-      replyTo: payload.email,
     });
 
     if (emailResult.status === "missing-config") {
