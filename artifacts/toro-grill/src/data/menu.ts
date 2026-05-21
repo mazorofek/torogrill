@@ -63,7 +63,7 @@ export const menuSections: MenuSection[] = [
       { name: "גושגושה / סמסה", price: 15 },
       { name: "מנטו", price: 18, description: "2 יחידות" },
       { name: "צ׳יבורק בשר", price: 17 },
-      { name: "צ׳יבורק תפו״א", price: 17 },
+      { name: "צ׳יבורק תפוח אדמה", price: 17 },
       { name: "צ׳יבורק פטריות", price: 17 },
       { name: "אושפלאו / פלוב", price: 55 },
       { name: "בחש", price: 55 },
