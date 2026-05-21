@@ -5,7 +5,6 @@ import {
   LoaderCircle,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
   Send,
 } from "lucide-react";
@@ -13,14 +12,12 @@ import {
 type ContactForm = {
   name: string;
   phone: string;
-  email: string;
   message: string;
 };
 
 const initialForm: ContactForm = {
   name: "",
   phone: "",
-  email: "",
   message: "",
 };
 
@@ -114,7 +111,7 @@ export function ContactSection() {
 
             <div className="space-y-6">
               <a
-                href="tel:04-1234567"
+                href="tel:03-952-0450"
                 className="flex items-start gap-4 group"
                 data-testid="link-phone"
               >
@@ -124,24 +121,8 @@ export function ContactSection() {
                 <div>
                   <p className="text-sm text-white/45 mb-1">טלפון להזמנות</p>
                   <p className="text-lg font-light text-white" dir="ltr">
-                    04-1234567
+                    03-952-0450
                   </p>
-                </div>
-              </a>
-
-              <a
-                href="https://wa.me/9724123456789"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-4 group"
-                data-testid="link-whatsapp"
-              >
-                <div className="mt-1 bg-white/5 p-3 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                  <MessageCircle size={20} />
-                </div>
-                <div>
-                  <p className="text-sm text-white/45 mb-1">וואטסאפ</p>
-                  <p className="text-lg font-light text-white">שלחו הודעה</p>
                 </div>
               </a>
 
@@ -177,13 +158,13 @@ export function ContactSection() {
                   <div className="flex justify-between items-center border-b border-white/8 pb-3">
                     <span className="text-white font-light">ראשון–חמישי</span>
                     <span className="text-white/50" dir="ltr">
-                      12:00–23:00
+                      11:00–23:00
                     </span>
                   </div>
                   <div className="flex justify-between items-center border-b border-white/8 pb-3">
                     <span className="text-white font-light">שישי</span>
                     <span className="text-white/50" dir="ltr">
-                      12:00–15:00
+                      11:00–15:00
                     </span>
                   </div>
                   <div className="flex justify-between items-center pb-3">
@@ -229,16 +210,6 @@ export function ContactSection() {
                   inputMode="tel"
                   className="h-12 w-full border border-white/12 bg-white/[0.03] px-4 text-white outline-none transition-colors placeholder:text-white/30 focus:border-primary"
                   data-testid="input-contact-phone"
-                />
-              </label>
-              <label className="block">
-                <span className="mb-2 block text-sm text-white/55">אימייל</span>
-                <input
-                  value={form.email}
-                  onChange={(event) => updateField("email", event.target.value)}
-                  type="email"
-                  className="h-12 w-full border border-white/12 bg-white/[0.03] px-4 text-white outline-none transition-colors placeholder:text-white/30 focus:border-primary"
-                  data-testid="input-contact-email"
                 />
               </label>
               <label className="block">

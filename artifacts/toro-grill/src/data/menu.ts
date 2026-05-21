@@ -52,9 +52,9 @@ export const menuSections: MenuSection[] = [
       { name: "חלוויאת", price: 100 },
       { name: "כבד אווז", price: 120 },
       { name: "צלחת שווארמה", price: 70 },
-      { name: "מרגז משה לוקאל", price: 48 },
+      { name: "מרגז משק לגזיאל", price: 48 },
       { name: "לבבות אווז", price: 40 },
-      { name: "עראיס", price: 45 },
+      
     ],
   },
   {

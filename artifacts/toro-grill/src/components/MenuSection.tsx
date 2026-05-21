@@ -75,19 +75,19 @@ export function MenuSection() {
                 <div
                   key={`${item.name}-${idx}`}
                   data-testid={`menu-item-${idx}`}
-                  className="py-4 border-b border-white/8 last:border-b-0 md:last:border-b-0"
+                  className="py-4.5 border-b border-white/8 last:border-b-0 md:last:border-b-0"
                 >
                   <div className="flex items-baseline gap-1 w-full">
-                    <span className="text-white font-medium text-base leading-snug shrink-0">
+                    <span className="text-lg font-extrabold leading-snug text-white tracking-normal shrink-0 md:text-xl">
                       {item.name}
                     </span>
-                    <span className="flex-grow border-b border-dashed border-white/20 mx-3 mb-1" />
-                    <span className="text-primary font-semibold text-base whitespace-nowrap shrink-0">
+                    <span className="mx-3 mb-1 flex-grow border-b border-dashed border-white/25" />
+                    <span className="text-lg font-extrabold text-primary whitespace-nowrap shrink-0 md:text-xl">
                       {item.price !== null ? `${item.price} ₪` : "—"}
                     </span>
                   </div>
                   {item.description && (
-                    <p className="text-white/45 text-sm mt-1 pr-0 font-light leading-snug">
+                    <p className="mt-1.5 pr-0 text-sm font-medium leading-snug text-white/55">
                       {item.description}
                     </p>
                   )}

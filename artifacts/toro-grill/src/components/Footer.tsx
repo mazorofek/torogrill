@@ -1,4 +1,5 @@
-import { FaInstagram, FaFacebookF } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { SiTiktok } from "react-icons/si";
 
 export function Footer() {
   const scrollToSection = (id: string) => {
@@ -47,18 +48,34 @@ export function Footer() {
 
         <div className="flex justify-center gap-4 mb-10">
           <a
-            href="#"
+            href="https://www.instagram.com/torogrill_il/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Toro Grill Instagram"
             data-testid="link-instagram"
             className="w-10 h-10 border border-white/15 flex items-center justify-center text-white/45 hover:bg-primary hover:text-white hover:border-primary transition-all"
           >
             <FaInstagram size={16} />
           </a>
           <a
-            href="#"
+            href="https://www.facebook.com/profile.php?id=100063848808308&locale=he_IL"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Toro Grill Facebook"
             data-testid="link-facebook"
             className="w-10 h-10 border border-white/15 flex items-center justify-center text-white/45 hover:bg-primary hover:text-white hover:border-primary transition-all"
           >
             <FaFacebookF size={16} />
+          </a>
+          <a
+            href="https://www.tiktok.com/@toro.gril.il"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Toro Grill TikTok"
+            data-testid="link-tiktok"
+            className="w-10 h-10 border border-white/15 flex items-center justify-center text-white/45 hover:bg-primary hover:text-white hover:border-primary transition-all"
+          >
+            <SiTiktok size={16} />
           </a>
         </div>
 
