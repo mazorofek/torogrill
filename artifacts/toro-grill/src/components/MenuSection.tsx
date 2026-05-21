@@ -1,14 +1,25 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Gift } from "lucide-react";
 import { menuSections } from "@/data/menu";
+import menuLogo from "@/assets/images/toro-logo-real.png";
 
 export function MenuSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = menuSections[activeIndex];
 
   return (
-    <section id="menu" className="py-24 bg-background border-b border-white/5">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section
+      id="menu"
+      className="relative overflow-hidden py-24 bg-background border-b border-white/5"
+    >
+      <img
+        src={menuLogo}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[56%] z-0 w-[min(76rem,118vw)] -translate-x-1/2 -translate-y-1/2 select-none opacity-[0.065] mix-blend-screen"
+      />
+      <div className="container relative z-10 mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -54,15 +65,38 @@ export function MenuSection() {
             {/* Skewers note box */}
             {active.note && (
               <div
-                className="mb-10 border border-primary/60 bg-primary/5 px-6 py-5 text-sm text-white/90 space-y-2"
+                className="relative mb-12 overflow-hidden border border-primary/45 bg-gradient-to-l from-primary/18 via-white/[0.035] to-white/[0.01] px-6 py-6 text-white shadow-[0_22px_70px_rgba(0,0,0,0.35)] md:px-8"
                 dir="rtl"
               >
-                {active.note.map((line, i) => (
-                  <p key={i} className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5 shrink-0">—</span>
-                    <span>{line}</span>
-                  </p>
-                ))}
+                <div className="absolute inset-y-0 right-0 w-1 bg-primary" />
+                <div className="absolute -left-16 -top-20 size-44 rounded-full bg-primary/10 blur-3xl" />
+                <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-start gap-4">
+                    <span className="mt-1 flex size-12 shrink-0 items-center justify-center border border-primary/50 bg-primary text-white shadow-lg shadow-primary/20">
+                      <Gift size={23} />
+                    </span>
+                    <div>
+                      <p className="mb-1 text-xs font-bold tracking-[0.22em] text-primary">
+                        הטבת שיפודים
+                      </p>
+                      <h3 className="text-2xl font-extrabold leading-tight text-white md:text-3xl">
+                        סלטי הבית עלינו
+                      </h3>
+                      <p className="mt-2 max-w-xl text-base font-semibold leading-7 text-white/75">
+                        בהזמנת 2 שיפודים לסועד מקבלים את סלטי הבית ללא תוספת
+                        תשלום.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid gap-2 text-sm font-semibold text-white/70">
+                    {active.note.slice(1).map((line, i) => (
+                      <p key={i} className="flex items-start gap-2">
+                        <span className="mt-2 size-1.5 shrink-0 bg-primary" />
+                        <span>{line}</span>
+                      </p>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
