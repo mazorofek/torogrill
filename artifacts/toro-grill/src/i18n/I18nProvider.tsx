@@ -156,7 +156,7 @@ function setRestaurantJsonLd(locale: Locale, url: string) {
     telephone: "+972-3-952-0450",
     priceRange: "₪₪",
     servesCuisine: seo.cuisines,
-    image: `${SITE_URL}/opengraph-toro-logo.jpg`,
+    image: `${SITE_URL}/opengraph.jpg`,
     address: {
       "@type": "PostalAddress",
       streetAddress: seo.streetAddress,

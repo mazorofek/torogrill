@@ -57,7 +57,6 @@ export const menuSectionsByLocale: Record<Locale, MenuSection[]> = {
         { name: "צלחת שווארמה", price: 70 },
         { name: "מרגז משק לגזיאל", price: 48 },
         { name: "לבבות אווז", price: 40 },
-        { name: "עראיס", price: 45 },
       ],
     },
     {
@@ -217,7 +216,6 @@ export const menuSectionsByLocale: Record<Locale, MenuSection[]> = {
         { name: "Shawarma plate", price: 70 },
         { name: "Laziel Farm merguez", price: 48 },
         { name: "Goose hearts", price: 40 },
-        { name: "Arayes", price: 45 },
       ],
     },
     {
@@ -385,7 +383,6 @@ export const menuSectionsByLocale: Record<Locale, MenuSection[]> = {
         { name: "Тарелка шаурмы", price: 70 },
         { name: "Мергез фермы Лазиэль", price: 48 },
         { name: "Гусиные сердечки", price: 40 },
-        { name: "Араис", price: 45 },
       ],
     },
     {

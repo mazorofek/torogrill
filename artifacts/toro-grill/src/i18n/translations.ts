@@ -127,7 +127,7 @@ export const translations: Record<Locale, Translation> = {
       ariaLabel: "בחירת שפה",
     },
     hero: {
-      tagline: "בשר אמיתי. חוויה אמיתית.",
+      tagline: "מסעדת בשרים, מטבח בוכרי כשר.",
       delivery: "להזמנת משלוח",
       table: "להזמנת שולחן",
       events: "לאירועים",
@@ -259,7 +259,7 @@ export const translations: Record<Locale, Translation> = {
       ariaLabel: "Choose language",
     },
     hero: {
-      tagline: "Real meat. A real experience.",
+      tagline: "Meat restaurant, kosher Bukharian cuisine.",
       delivery: "Order delivery",
       table: "Reserve a table",
       events: "Events",
@@ -393,7 +393,7 @@ export const translations: Record<Locale, Translation> = {
       ariaLabel: "Выбор языка",
     },
     hero: {
-      tagline: "Настоящее мясо. Настоящие впечатления.",
+      tagline: "Мясной ресторан, кошерная бухарская кухня.",
       delivery: "Заказать доставку",
       table: "Забронировать стол",
       events: "Мероприятия",
