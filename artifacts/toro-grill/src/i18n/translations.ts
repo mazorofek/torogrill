@@ -17,6 +17,7 @@ type Translation = {
   };
   hero: {
     tagline: string;
+    kosherNote: string;
     delivery: string;
     table: string;
     events: string;
@@ -128,6 +129,7 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "מסעדת בשרים, מטבח בוכרי כשר.",
+      kosherNote: "כל הבשר בקר חלק בית יוסף",
       delivery: "להזמנת משלוח",
       table: "להזמנת שולחן",
       events: "לאירועים",
@@ -260,6 +262,7 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "Meat restaurant, kosher Bukharian cuisine.",
+      kosherNote: "All beef is glatt kosher Beit Yosef",
       delivery: "Order delivery",
       table: "Reserve a table",
       events: "Events",
@@ -394,6 +397,7 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "Мясной ресторан, кошерная бухарская кухня.",
+      kosherNote: "Вся говядина — халак Бейт Йосеф",
       delivery: "Заказать доставку",
       table: "Забронировать стол",
       events: "Мероприятия",

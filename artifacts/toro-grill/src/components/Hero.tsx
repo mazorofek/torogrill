@@ -58,6 +58,9 @@ export function Hero({ onDeliveryClick }: HeroProps) {
           <p className="text-lg md:text-2xl text-white/80 font-light mb-12 tracking-widest">
             {t.hero.tagline}
           </p>
+          <p className="mb-10 border border-white/15 bg-black/35 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-sm md:text-base">
+            {t.hero.kosherNote}
+          </p>
         </motion.div>
 
         <motion.div
