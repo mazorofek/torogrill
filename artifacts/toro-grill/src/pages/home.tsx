@@ -7,12 +7,17 @@ import { MenuSection } from "@/components/MenuSection";
 import { EventsSection } from "@/components/EventsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export default function Home() {
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const { dir } = useI18n();
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans text-foreground">
+    <div
+      className="flex flex-col min-h-screen bg-background font-sans text-foreground"
+      dir={dir}
+    >
       <Hero onDeliveryClick={() => setIsDeliveryOpen(true)} />
       <AboutSection />
       <MenuSection />

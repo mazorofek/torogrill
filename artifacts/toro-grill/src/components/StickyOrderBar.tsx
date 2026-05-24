@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type StickyOrderBarProps = {
   onDeliveryClick: () => void;
 };
 
 export function StickyOrderBar({ onDeliveryClick }: StickyOrderBarProps) {
+  const { t } = useI18n();
   const { scrollY } = {
     scrollY: {
       onChange: (cb: (v: number) => void) => {
@@ -50,7 +52,7 @@ export function StickyOrderBar({ onDeliveryClick }: StickyOrderBarProps) {
           className="flex-1 bg-primary text-white hover:bg-primary/90 rounded-none h-12 text-base font-medium border-none"
           onClick={onDeliveryClick}
         >
-          משלוח
+          {t.sticky.delivery}
         </Button>
         <Button
           data-testid="sticky-button-table"
@@ -58,7 +60,7 @@ export function StickyOrderBar({ onDeliveryClick }: StickyOrderBarProps) {
           className="flex-1 border border-white/25 text-white hover:bg-white hover:text-black bg-transparent rounded-none h-12 text-base font-medium"
           onClick={() => scrollToSection("contact")}
         >
-          הזמנת שולחן
+          {t.sticky.table}
         </Button>
         <Button
           data-testid="sticky-button-events"
@@ -66,7 +68,7 @@ export function StickyOrderBar({ onDeliveryClick }: StickyOrderBarProps) {
           className="flex-1 border border-primary/60 text-primary hover:bg-primary hover:text-white bg-transparent rounded-none h-12 text-base font-medium"
           onClick={() => scrollToSection("events")}
         >
-          אירועים
+          {t.sticky.events}
         </Button>
       </div>
     </motion.div>
