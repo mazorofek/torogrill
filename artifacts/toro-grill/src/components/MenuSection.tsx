@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Gift } from "lucide-react";
-import { menuSections } from "@/data/menu";
+import { menuSectionsByLocale } from "@/data/menu";
+import { useI18n } from "@/i18n/I18nProvider";
 import menuLogo from "@/assets/images/toro-logo-real.png";
 
 export function MenuSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { dir, locale, t } = useI18n();
+  const menuSections = menuSectionsByLocale[locale];
   const active = menuSections[activeIndex];
 
   return (
@@ -28,13 +31,13 @@ export function MenuSection() {
           className="text-center mb-14"
         >
           <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">
-            התפריט שלנו
+            {t.menu.title}
           </h2>
           <div className="w-20 h-[3px] bg-primary mx-auto" />
         </motion.div>
 
         {/* Category tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12" dir="rtl">
+        <div className="flex flex-wrap justify-center gap-2 mb-12" dir={dir}>
           {menuSections.map((section, idx) => (
             <button
               key={section.title}
@@ -66,9 +69,13 @@ export function MenuSection() {
             {active.note && (
               <div
                 className="relative mb-12 overflow-hidden border border-primary/45 bg-gradient-to-l from-primary/18 via-white/[0.035] to-white/[0.01] px-6 py-6 text-white shadow-[0_22px_70px_rgba(0,0,0,0.35)] md:px-8"
-                dir="rtl"
+                dir={dir}
               >
-                <div className="absolute inset-y-0 right-0 w-1 bg-primary" />
+                <div
+                  className={`absolute inset-y-0 w-1 bg-primary ${
+                    dir === "rtl" ? "right-0" : "left-0"
+                  }`}
+                />
                 <div className="absolute -left-16 -top-20 size-44 rounded-full bg-primary/10 blur-3xl" />
                 <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-start gap-4">
@@ -77,14 +84,13 @@ export function MenuSection() {
                     </span>
                     <div>
                       <p className="mb-1 text-xs font-bold tracking-[0.22em] text-primary">
-                        הטבת שיפודים
+                        {t.menu.offerLabel}
                       </p>
                       <h3 className="text-2xl font-extrabold leading-tight text-white md:text-3xl">
-                        סלטי הבית עלינו
+                        {t.menu.offerTitle}
                       </h3>
                       <p className="mt-2 max-w-xl text-base font-semibold leading-7 text-white/75">
-                        בהזמנת 2 שיפודים לסועד מקבלים את סלטי הבית ללא תוספת
-                        תשלום.
+                        {t.menu.offerDescription}
                       </p>
                     </div>
                   </div>
@@ -103,7 +109,7 @@ export function MenuSection() {
             {/* Menu items grid */}
             <div
               className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0"
-              dir="rtl"
+              dir={dir}
             >
               {active.items.map((item, idx) => (
                 <div
@@ -117,7 +123,9 @@ export function MenuSection() {
                     </span>
                     <span className="mx-3 mb-1 flex-grow border-b border-dashed border-white/25" />
                     <span className="text-lg font-extrabold text-primary whitespace-nowrap shrink-0 md:text-xl">
-                      {item.price !== null ? `${item.price} ₪` : "—"}
+                      {item.price !== null
+                        ? `${item.price} ₪`
+                        : t.menu.priceUnavailable}
                     </span>
                   </div>
                   {item.description && (

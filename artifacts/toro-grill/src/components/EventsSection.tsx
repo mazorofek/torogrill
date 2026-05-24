@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { LoaderCircle } from "lucide-react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useI18n } from "@/i18n/I18nProvider";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,18 +18,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
-  fullName: z.string().min(2, "נא להזין שם מלא"),
-  phone: z.string().min(9, "נא להזין מספר טלפון תקין"),
-  date: z.string().min(1, "נא לבחור תאריך"),
-  guests: z.coerce.number().min(1, "מינימום אורח אחד"),
-  notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  fullName: string;
+  phone: string;
+  date: string;
+  guests: number;
+  notes?: string;
+};
 
 export function EventsSection() {
+  const { dir, t } = useI18n();
   const { toast } = useToast();
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        fullName: z.string().min(2, t.events.validation.fullName),
+        phone: z.string().min(9, t.events.validation.phone),
+        date: z.string().min(1, t.events.validation.date),
+        guests: z.coerce.number().min(1, t.events.validation.guests),
+        notes: z.string().optional(),
+      }),
+    [t],
+  );
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,8 +64,8 @@ export function EventsSection() {
 
       if (response.status === 429) {
         toast({
-          title: "יותר מדי פניות",
-          description: "נשלחו יותר מדי פניות, נסו שוב בעוד כמה דקות",
+          title: t.events.toasts.rateLimitTitle,
+          description: t.events.toasts.rateLimitDescription,
           variant: "destructive",
         });
         return;
@@ -64,15 +76,15 @@ export function EventsSection() {
       }
 
       toast({
-        title: "תודה!",
-        description: "הפנייה נשלחה, נחזור אליכם בהקדם",
+        title: t.events.toasts.successTitle,
+        description: t.events.toasts.successDescription,
         variant: "default",
       });
       form.reset();
     } catch {
       toast({
-        title: "שגיאה",
-        description: "שליחת הפנייה נכשלה, נסו שוב",
+        title: t.events.toasts.errorTitle,
+        description: t.events.toasts.errorDescription,
         variant: "destructive",
       });
     }
@@ -98,12 +110,11 @@ export function EventsSection() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">
-            אירועים ומסיבות
+            {t.events.title}
           </h2>
           <div className="w-20 h-[3px] bg-primary mx-auto mb-6" />
           <p className="text-base text-white/55 font-light max-w-xl mx-auto leading-relaxed">
-            אנחנו מארגנים אירועים עסקיים, חגיגות משפחתיות ומסיבות פרטיות. מלאו
-            את הטופס ונחזור אליכם תוך 24 שעות.
+            {t.events.description}
           </p>
         </motion.div>
 
@@ -118,7 +129,7 @@ export function EventsSection() {
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6"
-              dir="rtl"
+              dir={dir}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
@@ -126,11 +137,13 @@ export function EventsSection() {
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white/80">שם מלא</FormLabel>
+                      <FormLabel className="text-white/80">
+                        {t.events.fields.fullName}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           data-testid="input-fullname"
-                          placeholder="ישראל ישראלי"
+                          placeholder={t.events.placeholders.fullName}
                           {...field}
                           className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30"
                         />
@@ -145,14 +158,18 @@ export function EventsSection() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white/80">טלפון</FormLabel>
+                      <FormLabel className="text-white/80">
+                        {t.events.fields.phone}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           data-testid="input-phone"
                           type="tel"
-                          placeholder="050-0000000"
+                          placeholder={t.events.placeholders.phone}
                           {...field}
-                          className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30 text-right"
+                          className={`bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30 ${
+                            dir === "rtl" ? "text-right" : "text-left"
+                          }`}
                           dir="ltr"
                         />
                       </FormControl>
@@ -167,7 +184,7 @@ export function EventsSection() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-white/80">
-                        תאריך האירוע
+                        {t.events.fields.date}
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -188,7 +205,7 @@ export function EventsSection() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-white/80">
-                        מספר מוזמנים
+                        {t.events.fields.guests}
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -210,11 +227,13 @@ export function EventsSection() {
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white/80">הערות</FormLabel>
+                    <FormLabel className="text-white/80">
+                      {t.events.fields.notes}
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         data-testid="input-notes"
-                        placeholder="ספרו לנו קצת על האירוע שלכם..."
+                        placeholder={t.events.placeholders.notes}
                         className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none min-h-[120px] resize-y text-white placeholder:text-white/30"
                         {...field}
                       />
@@ -234,7 +253,9 @@ export function EventsSection() {
                 {form.formState.isSubmitting && (
                   <LoaderCircle size={18} className="animate-spin" />
                 )}
-                {form.formState.isSubmitting ? "שולח..." : "שלחו פנייה"}
+                {form.formState.isSubmitting
+                  ? t.events.submitting
+                  : t.events.submit}
               </Button>
             </form>
           </Form>

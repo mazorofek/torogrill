@@ -1,14 +1,18 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useI18n } from "@/i18n/I18nProvider";
 import heroImg from "@/assets/images/hero.png";
-import logoImg from "@/assets/images/toro-logo.png";
+import logoImg from "@/assets/images/toro-logo-official.png";
 
 type HeroProps = {
   onDeliveryClick: () => void;
 };
 
 export function Hero({ onDeliveryClick }: HeroProps) {
+  const { t } = useI18n();
+
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -24,10 +28,14 @@ export function Hero({ onDeliveryClick }: HeroProps) {
       />
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/75 via-black/50 to-background" />
 
+      <div className="absolute right-4 top-32 z-30 md:right-8 md:top-8">
+        <LanguageSwitcher />
+      </div>
+
       <img
         src={logoImg}
         alt="Toro Grill"
-        className="absolute top-6 z-20 h-auto w-40 border border-white/10 bg-black/80 object-contain px-2 py-1 shadow-2xl md:top-8 md:w-56"
+        className="absolute top-6 z-20 h-auto w-48 border border-white/10 bg-black/80 object-contain px-2 py-1 shadow-2xl md:top-8 md:w-72"
         data-testid="hero-logo"
       />
 
@@ -48,7 +56,7 @@ export function Hero({ onDeliveryClick }: HeroProps) {
             </h1>
           </div>
           <p className="text-lg md:text-2xl text-white/80 font-light mb-12 tracking-widest">
-            בשר אמיתי. חוויה אמיתית.
+            {t.hero.tagline}
           </p>
         </motion.div>
 
@@ -64,7 +72,7 @@ export function Hero({ onDeliveryClick }: HeroProps) {
             className="w-full sm:w-auto text-lg h-13 px-8 bg-primary text-white border-2 border-primary hover:bg-primary/90 rounded-none transition-transform hover:scale-105"
             onClick={onDeliveryClick}
           >
-            להזמנת משלוח
+            {t.hero.delivery}
           </Button>
           <Button
             variant="outline"
@@ -73,7 +81,7 @@ export function Hero({ onDeliveryClick }: HeroProps) {
             className="w-full sm:w-auto text-lg h-13 px-8 border-2 border-white/60 text-white hover:bg-white hover:text-black bg-transparent rounded-none transition-transform hover:scale-105"
             onClick={() => scrollToSection("contact")}
           >
-            להזמנת שולחן
+            {t.hero.table}
           </Button>
           <Button
             variant="outline"
@@ -82,7 +90,7 @@ export function Hero({ onDeliveryClick }: HeroProps) {
             className="w-full sm:w-auto text-lg h-13 px-8 border-2 border-primary/70 text-primary hover:bg-primary hover:text-white bg-transparent rounded-none transition-transform hover:scale-105"
             onClick={() => scrollToSection("events")}
           >
-            לאירועים
+            {t.hero.events}
           </Button>
         </motion.div>
       </div>
@@ -93,6 +101,7 @@ export function Hero({ onDeliveryClick }: HeroProps) {
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ duration: 2, delay: 1, repeat: Infinity }}
         onClick={() => scrollToSection("menu")}
+        aria-label={t.hero.scrollToMenu}
       >
         <ChevronDown size={40} strokeWidth={1.5} />
       </motion.div>

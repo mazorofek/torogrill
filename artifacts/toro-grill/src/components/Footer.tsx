@@ -1,7 +1,9 @@
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export function Footer() {
+  const { t } = useI18n();
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -28,21 +30,21 @@ export function Footer() {
             className="text-white/45 hover:text-primary transition-colors text-base"
             data-testid="footer-link-menu"
           >
-            תפריט
+            {t.footer.menu}
           </button>
           <button
             onClick={() => scrollToSection("events")}
             className="text-white/45 hover:text-primary transition-colors text-base"
             data-testid="footer-link-events"
           >
-            אירועים
+            {t.footer.events}
           </button>
           <button
             onClick={() => scrollToSection("contact")}
             className="text-white/45 hover:text-primary transition-colors text-base"
             data-testid="footer-link-contact"
           >
-            צרו קשר
+            {t.footer.contact}
           </button>
         </div>
 
@@ -80,7 +82,10 @@ export function Footer() {
         </div>
 
         <div className="text-xs text-white/25 font-light border-t border-white/5 pt-6 max-w-md mx-auto">
-          © {new Date().getFullYear()} טורו גריל. כל הזכויות שמורות.
+          {t.footer.copyright.replace(
+            "{year}",
+            String(new Date().getFullYear()),
+          )}
         </div>
       </div>
     </footer>
