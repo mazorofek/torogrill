@@ -129,7 +129,7 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "מסעדת בשרים, מטבח בוכרי כשר.",
-      kosherNote: "כל הבשר בקר חלק בית יוסף",
+      kosherNote: "כל הבשר בקר חלק רבנות",
       delivery: "להזמנת משלוח",
       table: "להזמנת שולחן",
       events: "לאירועים",
@@ -262,7 +262,8 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "Meat restaurant, kosher Bukharian cuisine.",
-      kosherNote: "All beef is glatt kosher Beit Yosef",
+      kosherNote: "All beef isKosher Glatt (approved by the Rabbinate)
+ ",
       delivery: "Order delivery",
       table: "Reserve a table",
       events: "Events",
