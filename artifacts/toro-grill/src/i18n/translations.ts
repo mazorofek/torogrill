@@ -262,8 +262,7 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "Meat restaurant, kosher Bukharian cuisine.",
-      kosherNote: "All beef isKosher Glatt (approved by the Rabbinate)
- ",
+      kosherNote: "All beef isKosher Glatt (approved by the Rabbinate)",
       delivery: "Order delivery",
       table: "Reserve a table",
       events: "Events",
@@ -398,7 +397,7 @@ export const translations: Record<Locale, Translation> = {
     },
     hero: {
       tagline: "Мясной ресторан, кошерная бухарская кухня.",
-      kosherNote: "Вся говядина — халак Бейт Йосеф",
+      kosherNote: "Вся говядина — Глатт Кошер (Раввинат)",
       delivery: "Заказать доставку",
       table: "Забронировать стол",
       events: "Мероприятия",
