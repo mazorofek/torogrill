@@ -5,7 +5,11 @@ import { menuSectionsByLocale } from "@/data/menu";
 import { useI18n } from "@/i18n/I18nProvider";
 import menuLogo from "@/assets/images/toro-logo-real.png";
 
-export function MenuSection() {
+type MenuSectionProps = {
+  onLunchClick: () => void;
+};
+
+export function MenuSection({ onLunchClick }: MenuSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const { dir, locale, t } = useI18n();
   const menuSections = menuSectionsByLocale[locale];
@@ -34,6 +38,14 @@ export function MenuSection() {
             {t.menu.title}
           </h2>
           <div className="w-20 h-[3px] bg-primary mx-auto" />
+          <button
+            type="button"
+            onClick={onLunchClick}
+            className="mt-6 border border-primary/60 bg-primary/10 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary"
+            data-testid="button-lunch-deals"
+          >
+            {t.menu.lunchButton}
+          </button>
         </motion.div>
 
         {/* Category tabs */}

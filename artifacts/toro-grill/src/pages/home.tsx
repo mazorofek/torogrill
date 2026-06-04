@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { DeliveryOptionsModal } from "@/components/DeliveryOptionsModal";
+import { LunchDealsModal } from "@/components/LunchDealsModal";
+import { MainNavigationCards } from "@/components/MainNavigationCards";
 import { AboutSection } from "@/components/AboutSection";
 import { Hero } from "@/components/Hero";
 import { StickyOrderBar } from "@/components/StickyOrderBar";
@@ -11,6 +13,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 
 export default function Home() {
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const [isLunchOpen, setIsLunchOpen] = useState(false);
   const { dir } = useI18n();
 
   return (
@@ -19,8 +22,12 @@ export default function Home() {
       dir={dir}
     >
       <Hero onDeliveryClick={() => setIsDeliveryOpen(true)} />
+      <MainNavigationCards
+        onDeliveryClick={() => setIsDeliveryOpen(true)}
+        onLunchClick={() => setIsLunchOpen(true)}
+      />
       <AboutSection />
-      <MenuSection />
+      <MenuSection onLunchClick={() => setIsLunchOpen(true)} />
       <EventsSection />
       <ContactSection />
       <Footer />
@@ -28,6 +35,10 @@ export default function Home() {
       <DeliveryOptionsModal
         isOpen={isDeliveryOpen}
         onClose={() => setIsDeliveryOpen(false)}
+      />
+      <LunchDealsModal
+        isOpen={isLunchOpen}
+        onClose={() => setIsLunchOpen(false)}
       />
     </div>
   );

@@ -1,6 +1,5 @@
 services:
   api:
-    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -10,7 +9,6 @@ services:
       NODE_ENV: production
 
   web:
-    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile.web

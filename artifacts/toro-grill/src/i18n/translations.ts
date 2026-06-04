@@ -29,16 +29,47 @@ type Translation = {
     paragraphs: string[];
     highlights: Array<{ title: string; text: string }>;
   };
+  quickNav: {
+    menu: { title: string; text: string };
+    lunch: { title: string; text: string };
+    events: { title: string; text: string };
+    orders: {
+      title: string;
+      text: string;
+      delivery: string;
+      table: string;
+    };
+  };
   menu: {
     title: string;
+    lunchButton: string;
     offerLabel: string;
     offerTitle: string;
     offerDescription: string;
     priceUnavailable: string;
   };
+  lunchDeals: {
+    closeOverlay: string;
+    close: string;
+    kicker: string;
+    title: string;
+    description: string;
+    includesTitle: string;
+    deals: Array<{
+      title: string;
+      price: string;
+      badge: string;
+      description: string;
+      includes: string[];
+    }>;
+  };
   events: {
     title: string;
     description: string;
+    previewTitle: string;
+    previewDescription: string;
+    imageAlt: string;
+    features: string[];
     fields: {
       fullName: string;
       phone: string;
@@ -157,18 +188,83 @@ export const translations: Record<Locale, Translation> = {
         },
       ],
     },
+    quickNav: {
+      menu: {
+        title: "תפריט",
+        text: "כל המנות, השיפודים, הסטייקים והמטבח הבוכרי.",
+      },
+      lunch: {
+        title: "עסקיות צהריים",
+        text: "בשירות עצמי, 11:00-17:00",
+      },
+      events: {
+        title: "אירועים",
+        text: "אולם לאירועים, חגיגות משפחתיות ומפגשים עסקיים.",
+      },
+      orders: {
+        title: "הזמנות",
+        text: "משלוחים או השארת פרטים להזמנת שולחן.",
+        delivery: "משלוח",
+        table: "שולחן",
+      },
+    },
     menu: {
       title: "התפריט שלנו",
+      lunchButton: "עסקיות צהריים",
       offerLabel: "הטבת שיפודים",
       offerTitle: "סלטי הבית עלינו",
       offerDescription:
         "בהזמנת 2 שיפודים לסועד מקבלים את סלטי הבית ללא תוספת תשלום.",
       priceUnavailable: "—",
     },
+    lunchDeals: {
+      closeOverlay: "סגירת עסקיות צהריים",
+      close: "סגירה",
+      kicker: "בשירות עצמי | 11:00-17:00",
+      title: "עסקיות צהריים",
+      description:
+        "ארוחת צהריים מלאה ומשביעה: שיפודים על הגריל, תוספת חמה, צ׳יפס, לאפה, שתייה ובר סלטים חופשי.",
+      includesTitle: "כולל",
+      deals: [
+        {
+          title: "עסקית 65",
+          price: "65 ₪",
+          badge: "2 שיפודים רגילים",
+          description:
+            "שני שיפודים רגילים בצלחת, עם כל מה שצריך לארוחת צהריים מלאה.",
+          includes: [
+            "ניתן לבחור 2 תוספות מתוך אושפלאו / באחש / פירה",
+            "צ׳יפס",
+            "לאפה",
+            "שתייה",
+            "בר סלטים חופשי",
+          ],
+        },
+        {
+          title: "עסקית 85",
+          price: "85 ₪",
+          badge: "רגיל + מיוחד",
+          description:
+            "שיפוד רגיל לצד שיפוד מיוחד לבחירה: רולדה / אנטריקוט / כבש / פילה.",
+          includes: [
+            "ניתן לבחור 2 תוספות מתוך אושפלאו / באחש / פירה",
+            "צ׳יפס",
+            "לאפה",
+            "שתייה",
+            "בר סלטים חופשי",
+          ],
+        },
+      ],
+    },
     events: {
       title: "אירועים ומסיבות",
       description:
         "אנחנו מארגנים אירועים עסקיים, חגיגות משפחתיות ומסיבות פרטיות. מלאו את הטופס ונחזור אליכם תוך 24 שעות.",
+      previewTitle: "אולם לאירועים באווירה חמה",
+      previewDescription:
+        "בקרוב נעלה גלריה מלאה של האולם. בינתיים אפשר להשאיר פרטים ונחזור עם התאמה אישית לאירוע שלכם.",
+      imageAlt: "אולם אירועים בטורו גריל",
+      features: ["אירועים משפחתיים", "אירועים עסקיים", "תפריט בשרי ובוכרי"],
       fields: {
         fullName: "שם מלא",
         phone: "טלפון",
@@ -290,18 +386,87 @@ export const translations: Record<Locale, Translation> = {
         },
       ],
     },
+    quickNav: {
+      menu: {
+        title: "Menu",
+        text: "Skewers, steaks, Bukharian dishes, drinks and desserts.",
+      },
+      lunch: {
+        title: "Lunch Deals",
+        text: "Self-service lunch, 11:00-17:00, with two clear options.",
+      },
+      events: {
+        title: "Events",
+        text: "A warm space for family celebrations and business gatherings.",
+      },
+      orders: {
+        title: "Orders",
+        text: "Order delivery or leave your details to reserve a table.",
+        delivery: "Delivery",
+        table: "Table",
+      },
+    },
     menu: {
       title: "Our Menu",
+      lunchButton: "Lunch Deals",
       offerLabel: "Skewer offer",
       offerTitle: "House salads on us",
       offerDescription:
         "Order 2 skewers per guest and receive the house salads at no extra charge.",
       priceUnavailable: "—",
     },
+    lunchDeals: {
+      closeOverlay: "Close lunch deals",
+      close: "Close",
+      kicker: "Self-service | 11:00-17:00",
+      title: "Lunch Deals",
+      description:
+        "A filling lunch plate with grilled skewers, a hot side, fries, laffa bread, a drink, and unlimited salad bar.",
+      includesTitle: "Includes",
+      deals: [
+        {
+          title: "Lunch 65",
+          price: "₪65",
+          badge: "2 regular skewers",
+          description:
+            "Two regular skewers served on a plate with everything you need for a full lunch.",
+          includes: [
+            "Choose 2 sides from osh palov / bakhsh / mashed potatoes",
+            "Fries",
+            "Laffa bread",
+            "Drink",
+            "Unlimited salad bar",
+          ],
+        },
+        {
+          title: "Lunch 85",
+          price: "₪85",
+          badge: "Regular + special",
+          description:
+            "1 regular skewer plus 1 special skewer: roulade / entrecote / lamb / fillet.",
+          includes: [
+            "Choose 2 sides from osh palov / bakhsh / mashed potatoes",
+            "Fries",
+            "Laffa bread",
+            "Drink",
+            "Unlimited salad bar",
+          ],
+        },
+      ],
+    },
     events: {
       title: "Events and Parties",
       description:
         "We host business events, family celebrations, and private parties. Fill out the form and we will get back to you within 24 hours.",
+      previewTitle: "A warm space for private events",
+      previewDescription:
+        "A full event gallery will be added soon. For now, leave your details and we will match the right setup for your event.",
+      imageAlt: "Toro Grill event hall",
+      features: [
+        "Family celebrations",
+        "Business events",
+        "Meat and Bukharian menu",
+      ],
       fields: {
         fullName: "Full name",
         phone: "Phone",
@@ -425,18 +590,87 @@ export const translations: Record<Locale, Translation> = {
         },
       ],
     },
+    quickNav: {
+      menu: {
+        title: "Меню",
+        text: "Шашлыки, стейки, бухарские блюда, напитки и десерты.",
+      },
+      lunch: {
+        title: "Бизнес-ланч",
+        text: "Самообслуживание, 11:00-17:00, две понятные опции.",
+      },
+      events: {
+        title: "Мероприятия",
+        text: "Теплое пространство для семейных и деловых событий.",
+      },
+      orders: {
+        title: "Заказы",
+        text: "Доставка или заявка на бронирование стола.",
+        delivery: "Доставка",
+        table: "Стол",
+      },
+    },
     menu: {
       title: "Наше меню",
+      lunchButton: "Бизнес-ланч",
       offerLabel: "Акция на шашлыки",
       offerTitle: "Фирменные салаты за наш счет",
       offerDescription:
         "При заказе 2 шашлыков на гостя фирменные салаты подаются без дополнительной оплаты.",
       priceUnavailable: "—",
     },
+    lunchDeals: {
+      closeOverlay: "Закрыть бизнес-ланч",
+      close: "Закрыть",
+      kicker: "Самообслуживание | 11:00-17:00",
+      title: "Бизнес-ланч",
+      description:
+        "Сытный обед на тарелке: шашлыки на гриле, горячий гарнир, картофель фри, лаффа, напиток и салат-бар без ограничений.",
+      includesTitle: "Включено",
+      deals: [
+        {
+          title: "Ланч 65",
+          price: "65 ₪",
+          badge: "2 обычных шашлыка",
+          description:
+            "Два обычных шашлыка на тарелке со всем, что нужно для полноценного обеда.",
+          includes: [
+            "Можно выбрать 2 гарнира: ошпалов / бахш / пюре",
+            "Картофель фри",
+            "Лаффа",
+            "Напиток",
+            "Салат-бар без ограничений",
+          ],
+        },
+        {
+          title: "Ланч 85",
+          price: "85 ₪",
+          badge: "Обычный + особый",
+          description:
+            "1 обычный шашлык и 1 особый шашлык: рулет / антрекот / баранина / филе.",
+          includes: [
+            "Можно выбрать 2 гарнира: ошпалов / бахш / пюре",
+            "Картофель фри",
+            "Лаффа",
+            "Напиток",
+            "Салат-бар без ограничений",
+          ],
+        },
+      ],
+    },
     events: {
       title: "Мероприятия и вечеринки",
       description:
         "Мы организуем деловые мероприятия, семейные праздники и частные вечеринки. Заполните форму, и мы свяжемся с вами в течение 24 часов.",
+      previewTitle: "Теплый зал для мероприятий",
+      previewDescription:
+        "Полная галерея зала будет добавлена позже. Пока оставьте данные, и мы подберем формат под ваше событие.",
+      imageAlt: "Зал мероприятий Toro Grill",
+      features: [
+        "Семейные праздники",
+        "Деловые мероприятия",
+        "Мясное и бухарское меню",
+      ],
       fields: {
         fullName: "Полное имя",
         phone: "Телефон",

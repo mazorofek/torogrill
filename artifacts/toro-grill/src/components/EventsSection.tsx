@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { LoaderCircle } from "lucide-react";
+import { Check, LoaderCircle } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -101,7 +101,7 @@ export function EventsSection() {
         }}
       />
 
-      <div className="container mx-auto px-4 relative z-10 max-w-3xl">
+      <div className="container mx-auto px-4 relative z-10 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -118,148 +118,189 @@ export function EventsSection() {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-black/60 backdrop-blur-sm border border-primary/20 p-8 md:p-12 shadow-2xl"
-        >
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6"
-              dir={dir}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white/80">
-                        {t.events.fields.fullName}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          data-testid="input-fullname"
-                          placeholder={t.events.placeholders.fullName}
-                          {...field}
-                          className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-primary" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white/80">
-                        {t.events.fields.phone}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          data-testid="input-phone"
-                          type="tel"
-                          placeholder={t.events.placeholders.phone}
-                          {...field}
-                          className={`bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30 ${
-                            dir === "rtl" ? "text-right" : "text-left"
-                          }`}
-                          dir="ltr"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-primary" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white/80">
-                        {t.events.fields.date}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          data-testid="input-date"
-                          type="date"
-                          {...field}
-                          className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white appearance-none"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-primary" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="guests"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white/80">
-                        {t.events.fields.guests}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          data-testid="input-guests"
-                          type="number"
-                          min="1"
-                          {...field}
-                          className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-primary" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/80">
-                      {t.events.fields.notes}
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        data-testid="input-notes"
-                        placeholder={t.events.placeholders.notes}
-                        className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none min-h-[120px] resize-y text-white placeholder:text-white/30"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-primary" />
-                  </FormItem>
-                )}
+        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="overflow-hidden border border-white/10 bg-black/50 shadow-2xl"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10">
+              <img
+                src="/photo.jpg"
+                alt={t.events.imageAlt}
+                className="h-full w-full object-cover"
+                data-testid="events-preview-image"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
+            </div>
+            <div className="p-6 md:p-8" dir={dir}>
+              <h3 className="text-2xl font-bold text-white md:text-3xl">
+                {t.events.previewTitle}
+              </h3>
+              <p className="mt-3 text-base leading-7 text-white/62">
+                {t.events.previewDescription}
+              </p>
+              <div className="mt-6 grid gap-3">
+                {t.events.features.map((feature) => (
+                  <p
+                    key={feature}
+                    className="flex items-center gap-3 text-sm font-semibold text-white/72"
+                  >
+                    <span className="flex size-7 shrink-0 items-center justify-center bg-primary text-white">
+                      <Check size={15} />
+                    </span>
+                    {feature}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-              <Button
-                data-testid="button-submit-events"
-                type="submit"
-                size="lg"
-                disabled={form.formState.isSubmitting}
-                className="w-full bg-primary text-white hover:bg-primary/90 rounded-none h-14 text-lg font-serif tracking-wide transition-all mt-4 border-none"
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-black/60 backdrop-blur-sm border border-primary/20 p-8 md:p-12 shadow-2xl"
+          >
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+                dir={dir}
               >
-                {form.formState.isSubmitting && (
-                  <LoaderCircle size={18} className="animate-spin" />
-                )}
-                {form.formState.isSubmitting
-                  ? t.events.submitting
-                  : t.events.submit}
-              </Button>
-            </form>
-          </Form>
-        </motion.div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white/80">
+                          {t.events.fields.fullName}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            data-testid="input-fullname"
+                            placeholder={t.events.placeholders.fullName}
+                            {...field}
+                            className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-primary" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white/80">
+                          {t.events.fields.phone}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            data-testid="input-phone"
+                            type="tel"
+                            placeholder={t.events.placeholders.phone}
+                            {...field}
+                            className={`bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white placeholder:text-white/30 ${
+                              dir === "rtl" ? "text-right" : "text-left"
+                            }`}
+                            dir="ltr"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-primary" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white/80">
+                          {t.events.fields.date}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            data-testid="input-date"
+                            type="date"
+                            {...field}
+                            className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white appearance-none"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-primary" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="guests"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white/80">
+                          {t.events.fields.guests}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            data-testid="input-guests"
+                            type="number"
+                            min="1"
+                            {...field}
+                            className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none h-12 text-white"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-primary" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white/80">
+                        {t.events.fields.notes}
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          data-testid="input-notes"
+                          placeholder={t.events.placeholders.notes}
+                          className="bg-white/5 border-white/15 focus-visible:border-primary rounded-none min-h-[120px] resize-y text-white placeholder:text-white/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-primary" />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  data-testid="button-submit-events"
+                  type="submit"
+                  size="lg"
+                  disabled={form.formState.isSubmitting}
+                  className="w-full bg-primary text-white hover:bg-primary/90 rounded-none h-14 text-lg font-serif tracking-wide transition-all mt-4 border-none"
+                >
+                  {form.formState.isSubmitting && (
+                    <LoaderCircle size={18} className="animate-spin" />
+                  )}
+                  {form.formState.isSubmitting
+                    ? t.events.submitting
+                    : t.events.submit}
+                </Button>
+              </form>
+            </Form>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
