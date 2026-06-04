@@ -1,17 +1,33 @@
-FROM --platform=linux/amd64 node:24-slim AS builder
+# syntax=docker/dockerfile:1.7
+
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
 RUN npm install -g pnpm@11.1.3
 
+ENV npm_config_user_agent=pnpm/11.1.3
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY artifacts/api-server/package.json artifacts/api-server/package.json
+COPY artifacts/mockup-sandbox/package.json artifacts/mockup-sandbox/package.json
+COPY artifacts/toro-grill/package.json artifacts/toro-grill/package.json
+COPY lib/api-client-react/package.json lib/api-client-react/package.json
+COPY lib/api-spec/package.json lib/api-spec/package.json
+COPY lib/api-zod/package.json lib/api-zod/package.json
+COPY lib/db/package.json lib/db/package.json
+COPY scripts/package.json scripts/package.json
+
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
+    pnpm config set store-dir /pnpm/store && \
+    pnpm install --frozen-lockfile --ignore-scripts
+
 COPY . .
 
-ENV npm_config_user_agent=pnpm/11.1.3
 ENV PORT=5173
 ENV BASE_PATH=/
 ENV API_ORIGIN=http://api:5001
 
-RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm --filter @workspace/toro-grill run build
 
 FROM --platform=linux/amd64 nginx:1.27-alpine AS runner
