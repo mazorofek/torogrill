@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { getVisitSource } from "@/lib/visitSource";
 import {
   Form,
   FormControl,
@@ -59,7 +60,10 @@ export function EventsSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          source: getVisitSource(),
+        }),
       });
 
       if (response.status === 429) {

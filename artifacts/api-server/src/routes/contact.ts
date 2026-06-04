@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import { escapeHtml, getStringField, sendBusinessEmail } from "../lib/email";
+import { getSubmissionSourceLabel } from "../lib/attribution";
 import { formSubmissionRateLimit } from "../middlewares/rateLimit";
 
 const router: IRouter = Router();
@@ -27,6 +28,7 @@ function parseContactPayload(body: unknown): ContactPayload | null {
 router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
   try {
     const payload = parseContactPayload(req.body);
+    const source = getSubmissionSourceLabel(req.body);
 
     if (!payload) {
       res.status(400).json({ message: "Missing required contact fields." });
@@ -37,6 +39,7 @@ router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
     const text = [
       `שם: ${payload.name}`,
       `טלפון: ${payload.phone}`,
+      `מקור הגעה: ${source}`,
       "",
       payload.message,
     ].join("\n");
@@ -46,6 +49,7 @@ router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
         <h2>פנייה חדשה מאתר Toro Grill</h2>
         <p><strong>שם:</strong> ${escapeHtml(payload.name)}</p>
         <p><strong>טלפון:</strong> ${escapeHtml(payload.phone)}</p>
+        <p><strong>מקור הגעה:</strong> ${escapeHtml(source)}</p>
         <p><strong>הודעה:</strong></p>
         <p>${escapeHtml(payload.message).replaceAll("\n", "<br />")}</p>
       </div>

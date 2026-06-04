@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { type FormEvent, useState } from "react";
 import { Clock, LoaderCircle, Mail, MapPin, Phone, Send } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
+import { getVisitSource } from "@/lib/visitSource";
 
 type ContactForm = {
   name: string;
@@ -51,7 +52,10 @@ export function ContactSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          source: getVisitSource(),
+        }),
       });
 
       if (!response.ok) {

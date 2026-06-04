@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import { escapeHtml, getStringField, sendBusinessEmail } from "../lib/email";
+import { getSubmissionSourceLabel } from "../lib/attribution";
 import { formSubmissionRateLimit } from "../middlewares/rateLimit";
 
 const router: IRouter = Router();
@@ -44,6 +45,7 @@ function parseEventPayload(body: unknown): EventPayload | null {
 router.post("/events", formSubmissionRateLimit, async (req, res, next) => {
   try {
     const payload = parseEventPayload(req.body);
+    const source = getSubmissionSourceLabel(req.body);
 
     if (!payload) {
       res.status(400).json({ message: "Missing required event fields." });
@@ -56,6 +58,7 @@ router.post("/events", formSubmissionRateLimit, async (req, res, next) => {
       `טלפון: ${payload.phone}`,
       `תאריך האירוע: ${payload.date}`,
       `מספר מוזמנים: ${payload.guests}`,
+      `מקור הגעה: ${source}`,
       `הערות: ${payload.notes ?? "לא נמסרו"}`,
     ].join("\n");
 
@@ -66,6 +69,7 @@ router.post("/events", formSubmissionRateLimit, async (req, res, next) => {
         <p><strong>טלפון:</strong> ${escapeHtml(payload.phone)}</p>
         <p><strong>תאריך האירוע:</strong> ${escapeHtml(payload.date)}</p>
         <p><strong>מספר מוזמנים:</strong> ${payload.guests}</p>
+        <p><strong>מקור הגעה:</strong> ${escapeHtml(source)}</p>
         <p><strong>הערות:</strong></p>
         <p>${escapeHtml(payload.notes ?? "לא נמסרו").replaceAll("\n", "<br />")}</p>
       </div>
