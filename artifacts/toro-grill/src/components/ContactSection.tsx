@@ -16,6 +16,10 @@ const initialForm: ContactForm = {
   message: "",
 };
 
+const wazeNavigationUrl = `https://waze.com/ul?q=${encodeURIComponent(
+  "סחרוב 20 ראשון לציון",
+)}&navigate=yes`;
+
 export function ContactSection() {
   const { dir, t } = useI18n();
   const [form, setForm] = useState<ContactForm>(initialForm);
@@ -125,19 +129,25 @@ export function ContactSection() {
                 </div>
               </a>
 
-              <div className="flex items-start gap-4">
-                <div className="mt-1 bg-white/5 p-3 text-primary">
+              <a
+                href={wazeNavigationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-4 group"
+                data-testid="link-waze-address"
+              >
+                <div className="mt-1 bg-white/5 p-3 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                   <MapPin size={20} />
                 </div>
                 <div>
                   <p className="text-sm text-white/45 mb-1">
                     {t.contact.addressLabel}
                   </p>
-                  <p className="text-lg font-light text-white">
+                  <p className="text-lg font-light text-white group-hover:text-primary transition-colors">
                     {t.contact.address}
                   </p>
                 </div>
-              </div>
+              </a>
             </div>
           </motion.div>
 

@@ -1,5 +1,11 @@
 import { Router, type IRouter } from "express";
-import { escapeHtml, getStringField, sendBusinessEmail } from "../lib/email";
+import {
+  escapeHtml,
+  getStringField,
+  renderLeadActionButtons,
+  renderLeadPhoneLink,
+  sendBusinessEmail,
+} from "../lib/email";
 import { getSubmissionSourceLabel } from "../lib/attribution";
 import { formSubmissionRateLimit } from "../middlewares/rateLimit";
 
@@ -66,7 +72,8 @@ router.post("/events", formSubmissionRateLimit, async (req, res, next) => {
       <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
         <h2>פניית אירוע חדשה מאתר Toro Grill</h2>
         <p><strong>שם מלא:</strong> ${escapeHtml(payload.fullName)}</p>
-        <p><strong>טלפון:</strong> ${escapeHtml(payload.phone)}</p>
+        <p><strong>טלפון:</strong> ${renderLeadPhoneLink(payload.phone)}</p>
+        ${renderLeadActionButtons(payload.phone)}
         <p><strong>תאריך האירוע:</strong> ${escapeHtml(payload.date)}</p>
         <p><strong>מספר מוזמנים:</strong> ${payload.guests}</p>
         <p><strong>מקור הגעה:</strong> ${escapeHtml(source)}</p>
