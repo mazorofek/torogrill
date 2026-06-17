@@ -11,7 +11,9 @@ _Replace the heading above with the project's name, and this line with one sente
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Required admin DB env: `DATABASE_URL` — Supabase/Postgres connection string
+- Required admin API env: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ADMIN_EMAILS`
+- Required admin frontend env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - API env file: `artifacts/api-server/.env`
 - Frontend env file: `artifacts/toro-grill/.env`
 

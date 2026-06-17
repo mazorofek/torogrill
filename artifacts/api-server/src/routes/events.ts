@@ -7,6 +7,7 @@ import {
   sendBusinessEmail,
 } from "../lib/email";
 import { getSubmissionSourceLabel } from "../lib/attribution";
+import { tryCreateLead } from "../lib/leads";
 import { formSubmissionRateLimit } from "../middlewares/rateLimit";
 
 const router: IRouter = Router();
@@ -57,6 +58,16 @@ router.post("/events", formSubmissionRateLimit, async (req, res, next) => {
       res.status(400).json({ message: "Missing required event fields." });
       return;
     }
+
+    await tryCreateLead({
+      type: "event",
+      name: payload.fullName,
+      phone: payload.phone,
+      message: payload.notes,
+      source,
+      eventDate: payload.date,
+      guestsCount: payload.guests,
+    });
 
     const subject = `פניית אירוע חדשה מאתר Toro Grill - ${payload.fullName}`;
     const text = [

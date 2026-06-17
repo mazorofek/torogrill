@@ -17,6 +17,10 @@ This project deploys the frontend to Vercel and the Express API to Render.
    - `RESEND_API_KEY=<your Resend API key>`
    - `CONTACT_TO_EMAIL=<where form emails should arrive>`
    - `RESEND_FROM_EMAIL=<verified Resend sender>`
+   - `DATABASE_URL=<Supabase Postgres connection string>`
+   - `SUPABASE_URL=<Supabase project URL>`
+   - `SUPABASE_ANON_KEY=<Supabase anon key>`
+   - `ADMIN_EMAILS=<comma-separated admin email addresses>`
 6. Deploy the service.
 7. Copy the Render URL, for example `https://torogrill-api.onrender.com`.
 
@@ -46,7 +50,18 @@ In the existing Vercel project settings:
 - Build Command: `pnpm run build:web`
 - Output Directory: `artifacts/toro-grill/dist/public`
 
-No frontend environment variables are required for production because Vercel proxies `/api/*` to Render.
+Add these frontend environment variables for the admin login:
+
+- `VITE_SUPABASE_URL=<Supabase project URL>`
+- `VITE_SUPABASE_ANON_KEY=<Supabase anon key>`
+
+Vercel still proxies `/api/*` to Render for backend requests.
+
+For Docker builds, these values must be available as Docker Compose interpolation variables at build time, for example:
+
+```bash
+docker compose --env-file artifacts/toro-grill/.env up -d --build
+```
 
 ## 4. Verify Production
 
@@ -69,6 +84,7 @@ Frontend:
 3. Submit the event form.
 4. Confirm the requests go to `/api/contact` and `/api/events` on the Vercel domain.
 5. Confirm the business email receives both messages.
+6. Open `/admin/login`, sign in with a Supabase user whose email is listed in `ADMIN_EMAILS`, and confirm `/admin/leads` loads.
 
 ## Local Build Checks
 
@@ -76,4 +92,3 @@ Frontend:
 pnpm run build:api
 pnpm run build:web
 ```
-

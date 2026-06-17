@@ -74,14 +74,30 @@ PORT=5001
 RESEND_API_KEY=your_resend_api_key
 CONTACT_TO_EMAIL=your_business_email
 RESEND_FROM_EMAIL=Toro Grill <your_verified_sender@example.com>
+DATABASE_URL=your_supabase_postgres_connection_string
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_supabase_anon_key
+ADMIN_EMAILS=manager@example.com
 ```
 
 Do not commit this file to Git.
 
 ## 5. Build and Start the App
 
+Create `artifacts/toro-grill/.env` before building so the static admin login has Supabase config:
+
+```env
+PORT=5173
+BASE_PATH=/
+API_ORIGIN=http://api:5001
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Pass that file to Docker Compose when building so `VITE_*` reaches the frontend build args:
+
 ```bash
-docker compose -f docker-compose.aws.yml up -d --build
+docker compose --env-file artifacts/toro-grill/.env -f docker-compose.aws.yml up -d --build
 ```
 
 Check status:
@@ -111,7 +127,7 @@ From your browser:
 http://<server-public-ip>
 ```
 
-Submit the contact form and event form, then confirm the email arrives.
+Submit the contact form and event form, then confirm the email arrives. Open `/admin/login`, sign in with a Supabase user listed in `ADMIN_EMAILS`, and confirm `/admin/leads` loads.
 
 ## 7. Connect a Domain
 
@@ -136,12 +152,12 @@ On the server:
 ```bash
 cd torogrill
 git pull
-docker compose -f docker-compose.aws.yml up -d --build
+docker compose --env-file artifacts/toro-grill/.env -f docker-compose.aws.yml up -d --build
 ```
 
 ## Notes
 
-- The app currently does not need a database.
+- The admin dashboard needs Supabase/Postgres via `DATABASE_URL`.
 - The API is internal to Docker; only nginx is exposed publicly on port 80.
 - Keep `artifacts/api-server/.env` only on the server.
 - If Docker builds fail on a `t3.micro`, use `t3.small` or build images outside the server.

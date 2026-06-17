@@ -7,6 +7,7 @@ import {
   sendBusinessEmail,
 } from "../lib/email";
 import { getSubmissionSourceLabel } from "../lib/attribution";
+import { tryCreateLead } from "../lib/leads";
 import { formSubmissionRateLimit } from "../middlewares/rateLimit";
 
 const router: IRouter = Router();
@@ -40,6 +41,14 @@ router.post("/contact", formSubmissionRateLimit, async (req, res, next) => {
       res.status(400).json({ message: "Missing required contact fields." });
       return;
     }
+
+    await tryCreateLead({
+      type: "contact",
+      name: payload.name,
+      phone: payload.phone,
+      message: payload.message,
+      source,
+    });
 
     const subject = `פנייה חדשה מאתר Toro Grill - ${payload.name}`;
     const text = [
