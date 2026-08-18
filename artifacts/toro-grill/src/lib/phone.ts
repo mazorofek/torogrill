@@ -24,3 +24,14 @@ export function formatPhoneForTel(phone: string): string {
   const normalized = formatPhoneForWhatsApp(phone);
   return normalized ? `+${normalized}` : phone;
 }
+
+export function getWhatsAppHref(phone: string, message?: string): string {
+  const normalized = formatPhoneForWhatsApp(phone);
+  const text = message?.trim();
+
+  if (!text) {
+    return `https://wa.me/${normalized}`;
+  }
+
+  return `https://wa.me/${normalized}?text=${encodeURIComponent(text)}`;
+}

@@ -1,10 +1,12 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  CheckCircle2,
   LoaderCircle,
   MessageCircle,
   Phone,
   Save,
+  Send,
   UsersRound,
 } from "lucide-react";
 import { useAdminAuth } from "@/admin/AdminAuthProvider";
@@ -17,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { type Lead, type LeadStatus, updateAdminLead } from "@/lib/adminApi";
-import { formatPhoneForTel, formatPhoneForWhatsApp } from "@/lib/phone";
+import { formatPhoneForTel, getWhatsAppHref } from "@/lib/phone";
 
 type EventEditForm = {
   name: string;
@@ -56,6 +58,27 @@ function formatDateOnly(value: string | null): string {
   if (!value) return "ללא תאריך";
   const [year, month, day] = value.split("-");
   return day && month && year ? `${day}.${month}.${year}` : value;
+}
+
+function buildWhatsAppTemplates(form: EventEditForm) {
+  const date = formatDateOnly(form.eventDate || null);
+  const time = form.eventTime ? ` בשעה ${form.eventTime}` : "";
+  const guests = form.guestsCount ? ` עבור ${form.guestsCount} מוזמנים` : "";
+
+  return [
+    {
+      label: "בירור פרטים",
+      text: `שלום ${form.name}, מדברים מטורו גריל לגבי האירוע בתאריך ${date}. נשמח לאשר שעה וכמות מוזמנים.`,
+    },
+    {
+      label: "אישור אירוע",
+      text: `שלום ${form.name}, האירוע בטורו גריל אושר לתאריך ${date}${time}${guests}. נשמח לראותכם!`,
+    },
+    {
+      label: "בקשת שיחה",
+      text: `שלום ${form.name}, מדברים מטורו גריל. נשמח לשוחח קצרות כדי לסגור את פרטי האירוע.`,
+    },
+  ];
 }
 
 export function AdminEventDetailsDialog({
@@ -100,7 +123,9 @@ export function AdminEventDetailsDialog({
       onOpenChange(false);
     },
     onError: (nextError) => {
-      setError(nextError instanceof Error ? nextError.message : "עדכון האירוע נכשל");
+      setError(
+        nextError instanceof Error ? nextError.message : "עדכון האירוע נכשל",
+      );
     },
   });
 
@@ -117,7 +142,10 @@ export function AdminEventDetailsDialog({
       return;
     }
 
-    if (!Number.isFinite(Number(form.guestsCount)) || Number(form.guestsCount) < 1) {
+    if (
+      !Number.isFinite(Number(form.guestsCount)) ||
+      Number(form.guestsCount) < 1
+    ) {
       setError("מספר מוזמנים חייב להיות 1 ומעלה.");
       return;
     }
@@ -125,7 +153,7 @@ export function AdminEventDetailsDialog({
     updateMutation.mutate();
   };
 
-  const whatsappNumber = lead ? formatPhoneForWhatsApp(lead.phone) : "";
+  const whatsappTemplates = form ? buildWhatsAppTemplates(form) : [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -144,7 +172,7 @@ export function AdminEventDetailsDialog({
           <p className="text-sm text-[#7b7066]">לא נבחר אירוע.</p>
         ) : (
           <>
-            <div className="grid gap-3 rounded-lg border border-[#eee5d9] bg-[#fbf7f0] p-4 text-sm md:grid-cols-4">
+            <div className="grid gap-3 rounded-lg border border-[#eee5d9] bg-[#fbf7f0] p-4 text-sm md:grid-cols-5">
               <div>
                 <p className="text-[#8b8178]">לקוח</p>
                 <p className="font-bold text-[#1f1a17]">{lead.name}</p>
@@ -168,12 +196,16 @@ export function AdminEventDetailsDialog({
                   {lead.guestsCount ?? "-"}
                 </p>
               </div>
+              <div>
+                <p className="text-[#8b8178]">מקור</p>
+                <p className="font-bold text-[#1f1a17]">{lead.source}</p>
+              </div>
             </div>
 
             <div className="grid gap-2 md:grid-cols-2">
               <Button asChild className="h-11 gap-2 bg-emerald-600 text-white">
                 <a
-                  href={`https://wa.me/${whatsappNumber}`}
+                  href={getWhatsAppHref(form.phone)}
                   target="_blank"
                   rel="noopener noreferrer"
                   dir="ltr"
@@ -190,7 +222,66 @@ export function AdminEventDetailsDialog({
               </Button>
             </div>
 
+            <section className="rounded-lg border border-emerald-100 bg-emerald-50/70 p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="font-semibold text-emerald-950">
+                    הודעות מוכנות
+                  </h3>
+                  <p className="text-xs text-emerald-800">
+                    נפתח ב-WhatsApp עם טקסט שאפשר לערוך לפני שליחה.
+                  </p>
+                </div>
+                <Send className="size-5 text-emerald-700" />
+              </div>
+
+              <div className="grid gap-2 md:grid-cols-3">
+                {whatsappTemplates.map((template) => (
+                  <Button
+                    key={template.label}
+                    asChild
+                    type="button"
+                    variant="outline"
+                    className="h-auto min-h-11 justify-center whitespace-normal border-emerald-200 bg-white px-3 py-2 text-emerald-950"
+                  >
+                    <a
+                      href={getWhatsAppHref(form.phone, template.text)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {template.label}
+                    </a>
+                  </Button>
+                ))}
+              </div>
+            </section>
+
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="rounded-lg border border-[#eee5d9] bg-white p-3">
+                <p className="mb-2 text-sm font-medium text-[#5f554d]">
+                  שינוי סטטוס מהיר
+                </p>
+                <div className="grid gap-2 sm:grid-cols-4">
+                  {statusOptions.map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => updateField("status", value)}
+                      className={`flex h-10 items-center justify-center gap-2 rounded-md border px-3 text-sm font-semibold transition-colors ${
+                        form.status === value
+                          ? "border-primary bg-primary text-white"
+                          : "border-[#e6dfd4] bg-[#fbf7f0] text-[#5f554d] hover:bg-white"
+                      }`}
+                    >
+                      {form.status === value && (
+                        <CheckCircle2 className="size-4" />
+                      )}
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="block">
                   <span className="mb-2 block text-sm font-medium text-[#5f554d]">
@@ -198,7 +289,9 @@ export function AdminEventDetailsDialog({
                   </span>
                   <input
                     value={form.name}
-                    onChange={(event) => updateField("name", event.target.value)}
+                    onChange={(event) =>
+                      updateField("name", event.target.value)
+                    }
                     required
                     className="h-11 w-full rounded-md border border-[#e6dfd4] bg-white px-3 text-[#1f1a17] outline-none focus:border-primary"
                   />
@@ -210,7 +303,9 @@ export function AdminEventDetailsDialog({
                   </span>
                   <input
                     value={form.phone}
-                    onChange={(event) => updateField("phone", event.target.value)}
+                    onChange={(event) =>
+                      updateField("phone", event.target.value)
+                    }
                     required
                     inputMode="tel"
                     dir="ltr"
@@ -289,7 +384,9 @@ export function AdminEventDetailsDialog({
                 </span>
                 <textarea
                   value={form.message}
-                  onChange={(event) => updateField("message", event.target.value)}
+                  onChange={(event) =>
+                    updateField("message", event.target.value)
+                  }
                   rows={3}
                   className="w-full resize-y rounded-md border border-[#e6dfd4] bg-white px-3 py-2 text-[#1f1a17] outline-none focus:border-primary"
                 />

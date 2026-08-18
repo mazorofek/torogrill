@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+  AlertCircle,
   CalendarDays,
+  Clock3,
   MessageCircle,
   Phone,
   UsersRound,
@@ -12,7 +14,7 @@ import { AdminLayout } from "@/admin/AdminLayout";
 import { useAdminAuth } from "@/admin/AdminAuthProvider";
 import { Button } from "@/components/ui/button";
 import { fetchAdminLeads, type Lead } from "@/lib/adminApi";
-import { formatPhoneForTel, formatPhoneForWhatsApp } from "@/lib/phone";
+import { formatPhoneForTel, getWhatsAppHref } from "@/lib/phone";
 
 const statusLabels: Record<Lead["status"], string> = {
   new: "חדש",
@@ -58,6 +60,22 @@ function formatEventTime(value: string | null): string {
   return value?.slice(0, 5) ?? "שעה פתוחה";
 }
 
+function isOpenLead(lead: Lead): boolean {
+  return lead.status !== "closed" && lead.status !== "canceled";
+}
+
+function getTomorrowKey(): string {
+  return getDateKey(addDays(new Date(), 1));
+}
+
+function hasMissingEventDetails(lead: Lead): boolean {
+  return (
+    lead.type === "event" &&
+    isOpenLead(lead) &&
+    (!lead.eventTime || !lead.guestsCount)
+  );
+}
+
 function isDateInMonth(dateKey: string | null, date: Date): boolean {
   if (!dateKey) return false;
   const [year, month] = dateKey.split("-").map(Number);
@@ -86,7 +104,9 @@ function StatCard({
 
   return (
     <article className="flex items-center justify-between rounded-lg border border-[#eee5d9] bg-white p-5 shadow-sm">
-      <div className={`flex size-12 items-center justify-center rounded-full ${tones[tone]}`}>
+      <div
+        className={`flex size-12 items-center justify-center rounded-full ${tones[tone]}`}
+      >
         <Icon className="size-5" />
       </div>
       <div className="text-left">
@@ -95,6 +115,119 @@ function StatCard({
         <p className="text-xs text-[#8b8178]">{helper}</p>
       </div>
     </article>
+  );
+}
+
+function ActionQueue({
+  leads,
+  onSelectLead,
+  onOpenEventDetails,
+}: {
+  leads: Lead[];
+  onSelectLead: (lead: Lead) => void;
+  onOpenEventDetails: (lead: Lead) => void;
+}) {
+  const todayKey = getDateKey(new Date());
+  const tomorrowKey = getTomorrowKey();
+  const events = leads.filter(
+    (lead) => lead.type === "event" && isOpenLead(lead),
+  );
+  const newLeads = leads.filter((lead) => lead.status === "new");
+  const todayEvents = events.filter((lead) => lead.eventDate === todayKey);
+  const tomorrowEvents = events.filter(
+    (lead) => lead.eventDate === tomorrowKey,
+  );
+  const missingDetails = events.filter(hasMissingEventDetails);
+
+  const actions = [
+    {
+      label: "פניות חדשות",
+      count: newLeads.length,
+      helper: "מחכות לטיפול",
+      icon: MessageCircle,
+      tone: "rose",
+      lead: newLeads[0],
+      openDetails: false,
+    },
+    {
+      label: "אירועים היום",
+      count: todayEvents.length,
+      helper: "לוודא שהכל סגור",
+      icon: CalendarDays,
+      tone: "amber",
+      lead: todayEvents[0],
+      openDetails: true,
+    },
+    {
+      label: "אירועים מחר",
+      count: tomorrowEvents.length,
+      helper: "שווה לעבור על הפרטים",
+      icon: Clock3,
+      tone: "sky",
+      lead: tomorrowEvents[0],
+      openDetails: true,
+    },
+    {
+      label: "חסר פרט חשוב",
+      count: missingDetails.length,
+      helper: "שעה או כמות מוזמנים",
+      icon: AlertCircle,
+      tone: "violet",
+      lead: missingDetails[0],
+      openDetails: true,
+    },
+  ];
+
+  const tones: Record<string, string> = {
+    rose: "border-rose-100 bg-rose-50 text-rose-900",
+    amber: "border-amber-100 bg-amber-50 text-amber-950",
+    sky: "border-sky-100 bg-sky-50 text-sky-950",
+    violet: "border-violet-100 bg-violet-50 text-violet-950",
+  };
+
+  return (
+    <section className="mb-5 rounded-lg border border-[#eee5d9] bg-white p-4 shadow-sm">
+      <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h3 className="font-bold text-[#1f1a17]">צריך טיפול</h3>
+          <p className="text-sm text-[#7b7066]">
+            הדברים שכדאי לפתוח לפני שמתחילים את היום.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-4">
+        {actions.map((action) => {
+          const Icon = action.icon;
+          const disabled = !action.lead;
+
+          return (
+            <button
+              key={action.label}
+              type="button"
+              disabled={disabled}
+              onClick={() => {
+                if (!action.lead) return;
+                onSelectLead(action.lead);
+                if (action.openDetails) onOpenEventDetails(action.lead);
+              }}
+              className={`rounded-lg border p-4 text-right transition disabled:cursor-default disabled:opacity-55 ${tones[action.tone]} ${
+                disabled ? "" : "hover:-translate-y-0.5 hover:shadow-sm"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <Icon className="mt-1 size-5" />
+                <div>
+                  <p className="text-2xl font-bold">{action.count}</p>
+                  <p className="font-semibold">{action.label}</p>
+                  <p className="text-xs opacity-75">{action.helper}</p>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -144,7 +277,8 @@ function RecentLeadList({
                     : "פנייה כללית"}
                 </p>
                 <p className="mt-1 text-xs text-[#9b9188]">
-                  {formatShortDate(lead.eventDate)} · {formatCreatedAt(lead.createdAt)}
+                  {formatShortDate(lead.eventDate)} ·{" "}
+                  {formatCreatedAt(lead.createdAt)}
                 </p>
               </div>
               <span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-semibold text-rose-600">
@@ -183,7 +317,12 @@ function WeekCalendar({
         </div>
         <AdminEventDialog
           trigger={
-            <Button type="button" size="sm" variant="outline" className="gap-2 self-start">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="gap-2 self-start"
+            >
               אירוע חדש
             </Button>
           }
@@ -196,12 +335,19 @@ function WeekCalendar({
           const dayEvents = events.filter((event) => event.eventDate === key);
 
           return (
-            <div key={key} className="min-h-32 border-b border-[#eee5d9] p-3 md:border-b-0 md:border-l">
+            <div
+              key={key}
+              className="min-h-32 border-b border-[#eee5d9] p-3 md:border-b-0 md:border-l"
+            >
               <div className="mb-3 text-center">
                 <p className="text-xs font-semibold text-[#7b7066]">
-                  {new Intl.DateTimeFormat("he-IL", { weekday: "short" }).format(day)}
+                  {new Intl.DateTimeFormat("he-IL", {
+                    weekday: "short",
+                  }).format(day)}
                 </p>
-                <p className="text-sm font-bold text-[#1f1a17]">{formatShortDate(key)}</p>
+                <p className="text-sm font-bold text-[#1f1a17]">
+                  {formatShortDate(key)}
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -246,12 +392,12 @@ function LeadDetails({
     return (
       <aside className="rounded-lg border border-[#eee5d9] bg-white p-5 shadow-sm">
         <h3 className="font-bold text-[#1f1a17]">פרטי הפנייה</h3>
-        <p className="mt-4 text-sm text-[#7b7066]">בחר פנייה מהרשימה או מהיומן.</p>
+        <p className="mt-4 text-sm text-[#7b7066]">
+          בחר פנייה מהרשימה או מהיומן.
+        </p>
       </aside>
     );
   }
-
-  const whatsappNumber = formatPhoneForWhatsApp(lead.phone);
 
   return (
     <aside className="rounded-lg border border-[#eee5d9] bg-white p-5 shadow-sm">
@@ -296,7 +442,9 @@ function LeadDetails({
 
       {lead.message && (
         <div className="border-b border-[#eee5d9] py-4">
-          <p className="mb-2 text-sm font-semibold text-[#1f1a17]">הערות לקוח</p>
+          <p className="mb-2 text-sm font-semibold text-[#1f1a17]">
+            הערות לקוח
+          </p>
           <p className="whitespace-pre-wrap text-sm leading-6 text-[#5f554d]">
             {lead.message}
           </p>
@@ -315,7 +463,7 @@ function LeadDetails({
         )}
         <Button asChild className="h-11 w-full gap-2 bg-emerald-600 text-white">
           <a
-            href={`https://wa.me/${whatsappNumber}`}
+            href={getWhatsAppHref(lead.phone)}
             target="_blank"
             rel="noopener noreferrer"
             dir="ltr"
@@ -349,7 +497,9 @@ export default function AdminDashboardPage() {
   const events = leads.filter((lead) => lead.type === "event");
   const todayKey = getDateKey(new Date());
   const weekKeys = new Set(
-    Array.from({ length: 7 }, (_, index) => getDateKey(addDays(new Date(), index))),
+    Array.from({ length: 7 }, (_, index) =>
+      getDateKey(addDays(new Date(), index)),
+    ),
   );
   const selectedLead =
     leads.find((lead) => lead.id === selectedLeadId) ?? leads[0] ?? null;
@@ -357,10 +507,12 @@ export default function AdminDashboardPage() {
   const stats = {
     newLeads: leads.filter((lead) => lead.status === "new").length,
     todayEvents: events.filter((lead) => lead.eventDate === todayKey).length,
-    weekEvents: events.filter((lead) => lead.eventDate && weekKeys.has(lead.eventDate))
-      .length,
-    monthEvents: events.filter((lead) => isDateInMonth(lead.eventDate, new Date()))
-      .length,
+    weekEvents: events.filter(
+      (lead) => lead.eventDate && weekKeys.has(lead.eventDate),
+    ).length,
+    monthEvents: events.filter((lead) =>
+      isDateInMonth(lead.eventDate, new Date()),
+    ).length,
   };
 
   return (
@@ -406,6 +558,12 @@ export default function AdminDashboardPage() {
           tone="blue"
         />
       </div>
+
+      <ActionQueue
+        leads={leads}
+        onSelectLead={(lead) => setSelectedLeadId(lead.id)}
+        onOpenEventDetails={setEditingEvent}
+      />
 
       {leadsQuery.isLoading ? (
         <p className="rounded-lg border border-[#eee5d9] bg-white p-5 text-[#7b7066]">

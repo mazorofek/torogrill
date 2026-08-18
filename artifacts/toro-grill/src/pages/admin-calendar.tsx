@@ -15,7 +15,7 @@ import { AdminLayout } from "@/admin/AdminLayout";
 import { useAdminAuth } from "@/admin/AdminAuthProvider";
 import { Button } from "@/components/ui/button";
 import { fetchAdminEvents, type Lead } from "@/lib/adminApi";
-import { formatPhoneForTel, formatPhoneForWhatsApp } from "@/lib/phone";
+import { formatPhoneForTel, getWhatsAppHref } from "@/lib/phone";
 
 const weekDays = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"];
 
@@ -79,8 +79,6 @@ function EventLeadItem({
   lead: Lead;
   onOpenDetails: (lead: Lead) => void;
 }) {
-  const whatsappNumber = formatPhoneForWhatsApp(lead.phone);
-
   return (
     <article className="rounded-lg border border-[#eee5d9] bg-white p-4 shadow-sm">
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
@@ -135,7 +133,7 @@ function EventLeadItem({
         </Button>
         <Button asChild size="sm" variant="outline" className="gap-2">
           <a
-            href={`https://wa.me/${whatsappNumber}`}
+            href={getWhatsAppHref(lead.phone)}
             target="_blank"
             rel="noopener noreferrer"
             dir="ltr"
@@ -169,7 +167,10 @@ function MonthCalendar({
 
       <div className="grid grid-cols-7 border-y border-r border-[#eee5d9] text-center text-xs font-semibold text-[#7b7066]">
         {weekDays.map((day) => (
-          <div key={day} className="border-l border-[#eee5d9] bg-[#fbf7f0] py-2">
+          <div
+            key={day}
+            className="border-l border-[#eee5d9] bg-[#fbf7f0] py-2"
+          >
             {day}
           </div>
         ))}
@@ -178,7 +179,7 @@ function MonthCalendar({
       <div className="grid grid-cols-7 border-r border-[#eee5d9]">
         {cells.map((date, index) => {
           const key = date ? getDateKey(date) : `empty-${index}`;
-          const dayEvents = date ? eventsByDate.get(key) ?? [] : [];
+          const dayEvents = date ? (eventsByDate.get(key) ?? []) : [];
           const isToday = date && key === todayKey;
 
           return (
@@ -192,9 +193,7 @@ function MonthCalendar({
                 <>
                   <div
                     className={`mb-2 flex size-7 items-center justify-center rounded-full text-sm font-bold ${
-                      isToday
-                        ? "bg-primary text-white"
-                        : "text-[#1f1a17]"
+                      isToday ? "bg-primary text-white" : "text-[#1f1a17]"
                     }`}
                   >
                     {date.getDate()}
@@ -206,11 +205,14 @@ function MonthCalendar({
                         key={event.id}
                         type="button"
                         onClick={() => onOpenDetails(event)}
-                        className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-right text-xs text-emerald-900"
+                        title="לחץ לפתיחת פרטים ועריכה"
+                        className="w-full rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-right text-xs text-emerald-900 transition hover:border-emerald-300 hover:bg-emerald-100"
                       >
                         <p className="truncate font-bold">{event.name}</p>
-                        <p className="truncate">
-                          {event.eventTime?.slice(0, 5) ?? "שעה פתוחה"} ·{" "}
+                        <p className="truncate font-semibold">
+                          {event.eventTime?.slice(0, 5) ?? "שעה פתוחה"}
+                        </p>
+                        <p className="truncate text-emerald-700">
                           {event.guestsCount ?? "-"} מוזמנים
                         </p>
                       </button>
@@ -233,7 +235,9 @@ function MonthCalendar({
 
 export default function AdminCalendarPage() {
   const { session } = useAdminAuth();
-  const [monthCursor, setMonthCursor] = useState(() => startOfMonth(new Date()));
+  const [monthCursor, setMonthCursor] = useState(() =>
+    startOfMonth(new Date()),
+  );
   const [selectedEvent, setSelectedEvent] = useState<Lead | null>(null);
   const eventsQuery = useQuery({
     queryKey: ["admin", "events"],
